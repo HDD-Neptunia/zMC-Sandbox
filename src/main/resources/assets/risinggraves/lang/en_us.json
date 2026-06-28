@@ -1,0 +1,36 @@
+{
+  "item.risinggraves.lighter": "Lighter",
+  "item.risinggraves.sapphire": "Sapphire",
+  "item.risinggraves.ruby": "Ruby",
+  "item.risinggraves.citrine": "Citrine",
+  "item.risinggraves.amethyst": "Amethyst",
+
+
+  "item.risinggraves.sapphire_sword": "Sapphire Sword",
+  "item.risinggraves.amethyst_sword": "Amethyst Sword",
+  "item.risinggraves.citrine_sword": "Citrine Sword",
+  "item.risinggraves.emerald_sword": "Emerald Sword",
+  "item.risinggraves.ruby_sword": "Ruby Sword",
+
+  "item.risinggraves.sapphire_pickaxe": "Sapphire Pickaxe",
+  "item.risinggraves.amethyst_pickaxe": "Amethyst Pickaxe",
+  "item.risinggraves.citrine_pickaxe": "Citrine Pickaxe",
+  "item.risinggraves.emerald_pickaxe": "Emerald Pickaxe",
+  "item.risinggraves.ruby_pickaxe": "Ruby Pickaxe",
+
+  "item.risinggraves.sapphire_shovel": "Sapphire Shovel",
+  "item.risinggraves.amethyst_shovel": "Amethyst Shovel",
+  "item.risinggraves.emerald_shovel": "Emerald Shovel",
+  "item.risinggraves.citrine_shovel": "Citrine Shovel",
+  "item.risinggraves.ruby_shovel": "Ruby Shovel",
+
+  "item.risinggraves.amethyst_axe": "Amethyst Axe",
+  "item.risinggraves.sapphire_axe": "Sapphire Axe",
+  "item.risinggraves.citrine_axe": "Citrine Axe",
+  "item.risinggraves.emerald_axe": "Emerald Axe",
+  "item.risinggraves.ruby_axe": "Ruby Axe",
+
+  "block.risinggraves.sapphire_ore": "Sapphire Ore",
+  "block.risinggraves.block_of_sapphire": "Block of Sapphire",
+  "block.risinggraves.mystery_crate": "Mystery Crate"
+}

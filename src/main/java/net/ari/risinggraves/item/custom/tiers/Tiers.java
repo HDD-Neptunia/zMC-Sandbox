@@ -6,39 +6,39 @@ import net.minecraftforge.common.ForgeTier;
 import net.ari.risinggraves.item.ModItems;
 
 public class Tiers {
-    public static final Tier Sapphire = new ForgeTier(
+    public static final Tier SAPPHIRE = new ForgeTier(
             5,
-            3863,
-            1.3f,
-            5,
-            350,
+            2224,
+            10.5f,
+            6,
+            13,
             null,
             () -> Ingredient.of(ModItems.SAPPHIRE.get()));
 
-    public static final Tier Amethyst = new ForgeTier(
+    public static final Tier AMETHYST = new ForgeTier(
             5,
-            3863,
-            1.3f,
+            3063,
+            9.5f,
             5,
-            350,
+            19,
             null,
             () -> Ingredient.of(ModItems.AMETHYST.get()));
 
-    public static final Tier Ruby = new ForgeTier(
+    public static final Tier RUBY = new ForgeTier(
             5,
-            3863,
-            1.3f,
-            5,
-            350,
+            1824,
+            9.0f,
+            7,
+            12,
             null,
             () -> Ingredient.of(ModItems.RUBY.get()));
 
-    public static final Tier Citrine = new ForgeTier(
+    public static final Tier CITRINE = new ForgeTier(
             5,
-            3863,
-            1.3f,
-            5,
-            350,
+            1167,
+            12.0f,
+            8,
+            10,
             null,
             () -> Ingredient.of(ModItems.CITRINE.get()));
 }

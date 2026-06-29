@@ -32,5 +32,18 @@ public class SidebarScoreboard {
         Scoreboard board = player.getScoreboard();
         board.getOrCreatePlayerScore(player.getScoreboardName(), objective).setScore(points);
     }
+
+    public static void show(ServerPlayer player) {
+        player.getScoreboard().setDisplayObjective(DisplaySlot.SIDEBAR, objective);
+    }
+
+    public static void hide(ServerPlayer player) {
+        player.getScoreboard().setDisplayObjective(DisplaySlot.SIDEBAR, null);
+    }
+
+    public static void clear(ServerPlayer player) {
+        hide(player);
+    }
+
 }
 

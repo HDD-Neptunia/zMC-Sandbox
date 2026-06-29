@@ -1,0 +1,26 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "risinggraves:block/perk_machine",
+    "down": "risinggraves:block/perk_machine",
+    "up": "risinggraves:block/perk_machine",
+    "north": "risinggraves:block/perk_machine",
+    "south": "risinggraves:block/perk_machine",
+    "east": "risinggraves:block/perk_machine",
+    "west": "risinggraves:block/perk_machine"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": { "texture": "#north", "tintindex": 0 },
+        "south": { "texture": "#south", "tintindex": 0 },
+        "east":  { "texture": "#east",  "tintindex": 0 },
+        "west":  { "texture": "#west",  "tintindex": 0 },
+        "up":    { "texture": "#up",    "tintindex": 0 },
+        "down":  { "texture": "#down",  "tintindex": 0 }
+      }
+    }
+  ]
+}

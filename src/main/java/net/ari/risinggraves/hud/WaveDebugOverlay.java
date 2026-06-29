@@ -14,6 +14,8 @@ public class WaveDebugOverlay {
 
     @SubscribeEvent
     public static void onRenderOverlay(RenderGuiOverlayEvent.Post event) {
+        if (!WaveManager.wavesActive) return;
+
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
@@ -24,7 +26,7 @@ public class WaveDebugOverlay {
 
         Gui gui = mc.gui;
 
-        gui.drawString(pose, mc.font, "WAVE DEBUG", x, y, 0xFFFFFF);
+        gui.drawString(pose, mc.font, "Prepare to die.", x, y, 0xFFFFFF);
         y += 12;
 
         gui.drawString(pose, mc.font, "Wave: " + WaveManager.getCurrentWave(), x, y, 0xFFFFFF);

@@ -18,6 +18,7 @@ public class ChestList {
         storage.add(new ItemStack(Items.IRON_SWORD));
         storage.add(new ItemStack(Items.GOLDEN_SWORD));
         storage.add(new ItemStack(Items.DIAMOND_SWORD));
+        storage.add(new ItemStack(Items.NETHERITE_SWORD));
         storage.add(new ItemStack(ModItems.CITRINE_SWORD.get()));
         storage.add(new ItemStack(ModItems.EMERALD_SWORD.get()));
         storage.add(new ItemStack(ModItems.SAPPHIRE_SWORD.get()));
@@ -29,6 +30,7 @@ public class ChestList {
         storage.add(new ItemStack(Items.IRON_AXE));
         storage.add(new ItemStack(Items.GOLDEN_AXE));
         storage.add(new ItemStack(Items.DIAMOND_AXE));
+        storage.add(new ItemStack(Items.NETHERITE_AXE));
         storage.add(new ItemStack(ModItems.CITRINE_AXE.get()));
         storage.add(new ItemStack(ModItems.EMERALD_AXE.get()));
         storage.add(new ItemStack(ModItems.SAPPHIRE_AXE.get()));
@@ -40,6 +42,7 @@ public class ChestList {
         storage.add(new ItemStack(Items.STONE_SHOVEL));
         storage.add(new ItemStack(Items.WOODEN_SHOVEL));
         storage.add(new ItemStack(Items.GOLDEN_SHOVEL));
+        storage.add(new ItemStack(Items.NETHERITE_SHOVEL));
         storage.add(new ItemStack(ModItems.CITRINE_SHOVEL.get()));
         storage.add(new ItemStack(ModItems.EMERALD_SHOVEL.get()));
         storage.add(new ItemStack(ModItems.SAPPHIRE_SHOVEL.get()));
@@ -51,6 +54,7 @@ public class ChestList {
         storage.add(new ItemStack(Items.IRON_PICKAXE));
         storage.add(new ItemStack(Items.GOLDEN_PICKAXE));
         storage.add(new ItemStack(Items.DIAMOND_PICKAXE));
+        storage.add(new ItemStack(Items.NETHERITE_PICKAXE));
         storage.add(new ItemStack(ModItems.CITRINE_PICKAXE.get()));
         storage.add(new ItemStack(ModItems.EMERALD_PICKAXE.get()));
         storage.add(new ItemStack(ModItems.SAPPHIRE_PICKAXE.get()));

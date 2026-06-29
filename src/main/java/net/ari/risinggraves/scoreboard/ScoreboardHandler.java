@@ -29,14 +29,15 @@ public class ScoreboardHandler {
         int updated = current + points;
         playerScores.put(playerName, updated);
 
-        // Update sidebar if player is online
-        if (server != null) {
+        // Only update scoreboard if waves are active
+        if (WaveManager.wavesActive && server != null) {
             ServerPlayer player = server.getPlayerList().getPlayerByName(playerName);
             if (player != null) {
                 SidebarScoreboard.update(player, updated);
             }
         }
     }
+
 
     public int getPoints(String playerName) {
         return playerScores.getOrDefault(playerName, 0);

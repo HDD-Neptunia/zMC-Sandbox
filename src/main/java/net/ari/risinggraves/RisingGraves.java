@@ -24,6 +24,11 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.ari.risinggraves.zombies.CZombieRenderer;
 import net.ari.risinggraves.scoreboard.SidebarScoreboard;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+import net.ari.risinggraves.barrier.ModMenus;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.ari.risinggraves.networking.Networking;
+
+
 
 
 
@@ -32,6 +37,7 @@ import net.ari.risinggraves.init.ModEntities;
 
 import org.slf4j.Logger;
 
+import net.ari.risinggraves.barrier.CostScreen;
 import net.ari.risinggraves.block.ModBlockEntities;
 import net.ari.risinggraves.waves.WaveManager;
 
@@ -45,10 +51,13 @@ public class RisingGraves
     public static boolean zombiesMode = false;
     public RisingGraves()
     {
+        
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModMenus.MENUS.register(modEventBus);
+
         ModEntities.ENTITIES.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(WaveManager.class);
 
@@ -78,22 +87,43 @@ public class RisingGraves
         WaveCommand.register(event.getDispatcher());
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
-
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        System.out.println("COMMON SETUP FIRED");
+        event.enqueueWork(() -> {
+            System.out.println("REGISTERING NETWORKING");
+            Networking.register();
+        });
     }
+
 
     private void addCreative(CreativeModeTabEvent.BuildContents event) {
         if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(ModBlocks.SAPPHIRE_ORE);
             event.accept(ModBlocks.BLOCK_OF_SAPPHIRE);
             event.accept(ModBlocks.MYSTERY_CRATE);
+            event.accept(ModBlocks.CUSTOM_SPAWNER);
         }
 
 
         {
             if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+                event.accept(ModItems.BLOCKADE_WAND);
                 event.accept(ModItems.LIGHTER);
+                event.accept(ModItems.SAPPHIRE_AXE);
+                event.accept(ModItems.SAPPHIRE_PICKAXE);
+                event.accept(ModItems.SAPPHIRE_SHOVEL);
+                event.accept(ModItems.RUBY_AXE);
+                event.accept(ModItems.RUBY_PICKAXE);
+                event.accept(ModItems.RUBY_SHOVEL);
+                event.accept(ModItems.CITRINE_AXE);
+                event.accept(ModItems.CITRINE_PICKAXE);
+                event.accept(ModItems.CITRINE_SHOVEL);
+                event.accept(ModItems.AMETHYST_AXE);
+                event.accept(ModItems.AMETHYST_PICKAXE);
+                event.accept(ModItems.AMETHYST_SHOVEL);
+                event.accept(ModItems.EMERALD_AXE);
+                event.accept(ModItems.EMERALD_PICKAXE);
+                event.accept(ModItems.EMERALD_SHOVEL);
             }
             if (event.getTab() == CreativeModeTabs.COMBAT) {
                 event.accept(ModItems.SAPPHIRE_SWORD);
@@ -124,7 +154,7 @@ public class RisingGraves
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-            
+            MenuScreens.register(ModMenus.COST_MENU.get(), CostScreen::new);
         }
 
     @SubscribeEvent

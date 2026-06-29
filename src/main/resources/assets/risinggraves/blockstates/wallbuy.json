@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "risinggraves:block/wallbuy", "y": 180 },
+    "facing=south": { "model": "risinggraves:block/wallbuy" },
+    "facing=east":  { "model": "risinggraves:block/wallbuy", "y": 270 },
+    "facing=west":  { "model": "risinggraves:block/wallbuy", "y": 90 }
+  }
+}

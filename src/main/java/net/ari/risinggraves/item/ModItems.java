@@ -3,12 +3,16 @@ package net.ari.risinggraves.item;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.ari.risinggraves.barrier.WandFunction;
+
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.ari.risinggraves.RisingGraves;
+import net.ari.risinggraves.item.custom.tiers.Tiers;
+
 
 
 
@@ -17,98 +21,155 @@ public class ModItems {
            DeferredRegister.create(ForgeRegistries.ITEMS, RisingGraves.MOD_ID);
 
 
-public static final RegistryObject<Item> LIGHTER = ITEMS.register ( "lighter",
-        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<Item> LIGHTER = ITEMS.register ( "lighter",
+                () -> new Item(new Item.Properties()));
+
+        public static final RegistryObject<Item> BLOCKADE_WAND =
+                ITEMS.register("blockade_wand", () -> new WandFunction(new Item.Properties()));
+
+        public static final RegistryObject<ShovelItem> WALLBUY_WAND = ITEMS.register ("wallbuy_wand",
+                () -> new ShovelItem(Tiers.SAPPHIRE, 2, 1.0f, new Item.Properties()));
 
 
+        public static final RegistryObject<Item> SAPPHIRE = ITEMS.register ("sapphire",
+                () -> new Item(new Item.Properties()));
 
+        public static final RegistryObject<SwordItem> SAPPHIRE_SWORD = ITEMS.register ("sapphire_sword",
+                () -> new SwordItem(Tiers.SAPPHIRE, 3, 2.0f, new Item.Properties()));
 
-public static final RegistryObject<Item> SAPPHIRE = ITEMS.register ("sapphire",
-        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<ShovelItem> SAPPHIRE_SHOVEL = ITEMS.register ("sapphire_shovel",
+                () -> new ShovelItem(Tiers.SAPPHIRE, 2, 1.0f, new Item.Properties()));
+                
+        public static final RegistryObject<AxeItem> SAPPHIRE_AXE = ITEMS.register ("sapphire_axe",
+                () -> new AxeItem(Tiers.SAPPHIRE, 5, 0.9f, new Item.Properties()));
 
-public static final RegistryObject<SwordItem> SAPPHIRE_SWORD = ITEMS.register ("sapphire_sword",
-            () -> new SwordItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> SAPPHIRE_PICKAXE = ITEMS.register ("sapphire_pickaxe",
+                () -> new PickaxeItem(Tiers.SAPPHIRE, 2, 1.2f, new Item.Properties()));
 
-public static final RegistryObject<ShovelItem> SAPPHIRE_SHOVEL = ITEMS.register ("sapphire_shovel",
-            () -> new ShovelItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> SAPPHIRE_HELMET = ITEMS.register ("sapphire_helmet",
+                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
         
-public static final RegistryObject<AxeItem> SAPPHIRE_AXE = ITEMS.register ("sapphire_axe",
-            () -> new AxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> SAPPHIRE_CHESTPLATE = ITEMS.register ("sapphire_chestplate",
+                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
 
-public static final RegistryObject<PickaxeItem> SAPPHIRE_PICKAXE = ITEMS.register ("sapphire_pickaxe",
-            () -> new PickaxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> SAPPHIRE_LEGGINGS = ITEMS.register ("sapphire_leggings",
+                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
+
+        public static final RegistryObject<PickaxeItem> SAPPHIRE_BOOTS = ITEMS.register ("sapphire_boots",
+                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
 
 
 
+        public static final RegistryObject<SwordItem> EMERALD_SWORD = ITEMS.register ("emerald_sword",
+                () -> new SwordItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
 
-public static final RegistryObject<SwordItem> EMERALD_SWORD = ITEMS.register ("emerald_sword",
-            () -> new SwordItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<ShovelItem> EMERALD_SHOVEL = ITEMS.register ("emerald_shovel",
+                () -> new ShovelItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+                
+        public static final RegistryObject<AxeItem> EMERALD_AXE = ITEMS.register ("emerald_axe",
+                () -> new AxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
 
-public static final RegistryObject<ShovelItem> EMERALD_SHOVEL = ITEMS.register ("emerald_shovel",
-            () -> new ShovelItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> EMERALD_PICKAXE = ITEMS.register ("emerald_pickaxe",
+                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+
+        public static final RegistryObject<PickaxeItem> EMERALD_HELMET = ITEMS.register ("emerald_helmet",
+                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
         
-public static final RegistryObject<AxeItem> EMERALD_AXE = ITEMS.register ("emerald_axe",
-            () -> new AxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> EMERALD_CHESTPLATE = ITEMS.register ("emerald_chestplate",
+                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
 
-public static final RegistryObject<PickaxeItem> EMERALD_PICKAXE = ITEMS.register ("emerald_pickaxe",
-            () -> new PickaxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> EMERALD_LEGGINGS = ITEMS.register ("emerald_leggings",
+                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+
+        public static final RegistryObject<PickaxeItem> EMERALD_BOOTS = ITEMS.register ("emerald_boots",
+                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
 
 
 
+        public static final RegistryObject<Item> AMETHYST = ITEMS.register ("amethyst",
+                () -> new Item(new Item.Properties()));
 
+        public static final RegistryObject<SwordItem> AMETHYST_SWORD = ITEMS.register ("amethyst_sword",
+                () -> new SwordItem(Tiers.AMETHYST, 3, 1.9f, new Item.Properties()));
 
-public static final RegistryObject<Item> AMETHYST = ITEMS.register ("amethyst",
-        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<ShovelItem> AMETHYST_SHOVEL = ITEMS.register ("amethyst_shovel",
+                () -> new ShovelItem(Tiers.AMETHYST, 2, 0.9f, new Item.Properties()));
+                
+        public static final RegistryObject<AxeItem> AMETHYST_AXE = ITEMS.register ("amethyst_axe",
+                () -> new AxeItem(Tiers.AMETHYST, 5, 0.8f, new Item.Properties()));
 
-public static final RegistryObject<SwordItem> AMETHYST_SWORD = ITEMS.register ("amethyst_sword",
-            () -> new SwordItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> AMETHYST_PICKAXE = ITEMS.register ("amethyst_pickaxe",
+                () -> new PickaxeItem(Tiers.AMETHYST, 2, 1.1f, new Item.Properties()));
 
-public static final RegistryObject<ShovelItem> AMETHYST_SHOVEL = ITEMS.register ("amethyst_shovel",
-            () -> new ShovelItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> AMETHYST_HELMET = ITEMS.register ("amethyst_helmet",
+                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
         
-public static final RegistryObject<AxeItem> AMETHYST_AXE = ITEMS.register ("amethyst_axe",
-            () -> new AxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> AMETHYST_CHESTPLATE = ITEMS.register ("amethyst_chestplate",
+                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
 
-public static final RegistryObject<PickaxeItem> AMETHYST_PICKAXE = ITEMS.register ("amethyst_pickaxe",
-            () -> new PickaxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> AMETHYST_LEGGINGS = ITEMS.register ("amethyst_leggings",
+                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
+
+        public static final RegistryObject<PickaxeItem> AMETHYST_BOOTS = ITEMS.register ("amethyst_boots",
+                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
 
 
 
+        public static final RegistryObject<Item> RUBY = ITEMS.register ("ruby",
+                () -> new Item(new Item.Properties()));
 
+        public static final RegistryObject<SwordItem> RUBY_SWORD = ITEMS.register ("ruby_sword",
+                () -> new SwordItem(Tiers.RUBY, 3, 1.8f, new Item.Properties()));
 
-public static final RegistryObject<Item> RUBY = ITEMS.register ("ruby",
-        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<ShovelItem> RUBY_SHOVEL = ITEMS.register ("ruby_shovel",
+                () -> new ShovelItem(Tiers.RUBY, 3, 0.9f, new Item.Properties()));
+                
+        public static final RegistryObject<AxeItem> RUBY_AXE = ITEMS.register ("ruby_axe",
+                () -> new AxeItem(Tiers.RUBY, 5, 0.85f, new Item.Properties()));
 
-public static final RegistryObject<SwordItem> RUBY_SWORD = ITEMS.register ("ruby_sword",
-            () -> new SwordItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> RUBY_PICKAXE = ITEMS.register ("ruby_pickaxe",
+                () -> new PickaxeItem(Tiers.RUBY, 3, 1.0f, new Item.Properties()));
 
-public static final RegistryObject<ShovelItem> RUBY_SHOVEL = ITEMS.register ("ruby_shovel",
-            () -> new ShovelItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> RUBY_HELMET = ITEMS.register ("ruby_helmet",
+                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
         
-public static final RegistryObject<AxeItem> RUBY_AXE = ITEMS.register ("ruby_axe",
-            () -> new AxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> RUBY_CHESTPLATE = ITEMS.register ("ruby_chestplate",
+                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
 
-public static final RegistryObject<PickaxeItem> RUBY_PICKAXE = ITEMS.register ("ruby_pickaxe",
-            () -> new PickaxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> RUBY_LEGGINGS = ITEMS.register ("ruby_leggings",
+                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
+
+        public static final RegistryObject<PickaxeItem> RUBY_BOOTS = ITEMS.register ("ruby_boots",
+                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
 
 
 
+        public static final RegistryObject<Item> CITRINE = ITEMS.register ("citrine",
+                () -> new Item(new Item.Properties()));
 
+        public static final RegistryObject<SwordItem> CITRINE_SWORD = ITEMS.register ("citrine_sword",
+                () -> new SwordItem(Tiers.CITRINE, 2, 2.3f, new Item.Properties()));
 
-public static final RegistryObject<Item> CITRINE = ITEMS.register ("citrine",
-        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<ShovelItem> CITRINE_SHOVEL = ITEMS.register ("citrine_shovel",
+                () -> new ShovelItem(Tiers.CITRINE, 3, 1.1f, new Item.Properties()));
+                
+        public static final RegistryObject<AxeItem> CITRINE_AXE = ITEMS.register ("citrine_axe",
+                () -> new AxeItem(Tiers.CITRINE, 5, 1.0f, new Item.Properties()));
 
-public static final RegistryObject<SwordItem> CITRINE_SWORD = ITEMS.register ("citrine_sword",
-            () -> new SwordItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> CITRINE_PICKAXE = ITEMS.register ("citrine_pickaxe",
+                () -> new PickaxeItem(Tiers.CITRINE, 3, 1.3f, new Item.Properties()));
 
-public static final RegistryObject<ShovelItem> CITRINE_SHOVEL = ITEMS.register ("citrine_shovel",
-            () -> new ShovelItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> CITRINE_HELMET = ITEMS.register ("citrine_helmet",
+                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
         
-public static final RegistryObject<AxeItem> CITRINE_AXE = ITEMS.register ("citrine_axe",
-            () -> new AxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> CITRINE_CHESTPLATE = ITEMS.register ("citrine_chestplate",
+                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
 
-public static final RegistryObject<PickaxeItem> CITRINE_PICKAXE = ITEMS.register ("citrine_pickaxe",
-            () -> new PickaxeItem(Tiers.NETHERITE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<PickaxeItem> CITRINE_LEGGINGS = ITEMS.register ("citrine_leggings",
+                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
+
+        public static final RegistryObject<PickaxeItem> CITRINE_BOOTS = ITEMS.register ("citrine_boots",
+                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
 
 
     public static void register(IEventBus eventBus) {

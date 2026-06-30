@@ -8,7 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.MenuProvider;
 import net.ari.risinggraves.block.WallbuyBlockEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+
 
 public class WallbuyCostMenuProvider implements MenuProvider {
 
@@ -22,7 +27,7 @@ public class WallbuyCostMenuProvider implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Set Wallbuy Cost");
+        return Component.literal("Wallbuy Cost");
     }
 
     @Override
@@ -30,3 +35,4 @@ public class WallbuyCostMenuProvider implements MenuProvider {
         return new WallbuyCostMenu(id, inv, wallbuy, item);
     }
 }
+

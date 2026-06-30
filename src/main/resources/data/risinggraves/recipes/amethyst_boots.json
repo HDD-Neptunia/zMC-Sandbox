@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "A A",
+    "A A"
+  ],
+  "key": {
+    "A": { "item": "risinggraves:amethyst" }
+  },
+  "result": {
+    "item": "risinggraves:amethyst_boots",
+    "count": 1
+  }
+}

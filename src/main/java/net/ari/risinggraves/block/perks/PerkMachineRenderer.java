@@ -9,6 +9,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.ari.risinggraves.block.PerkMachineBlockEntity;
 import net.ari.risinggraves.perks.PerkCosts;
+import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.Font;
+
+
+
+
 
 public class PerkMachineRenderer implements BlockEntityRenderer<PerkMachineBlockEntity> {
 
@@ -47,17 +53,17 @@ public class PerkMachineRenderer implements BlockEntityRenderer<PerkMachineBlock
         float width = font.width(text) / 2f;
 
         font.drawInBatch(
-                text,
-                -width,
-                0,
+                Component.literal(text),
+                -width, 0,
                 0xFFFFFF,
                 false,
                 poseStack.last().pose(),
                 buffer,
-                net.minecraft.client.gui.Font.DisplayMode.NORMAL,
+                false,
                 0,
-                light
+                15728880
         );
+
 
         poseStack.popPose();
     }

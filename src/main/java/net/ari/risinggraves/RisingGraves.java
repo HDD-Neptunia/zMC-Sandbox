@@ -27,10 +27,12 @@ import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 import net.ari.risinggraves.barrier.ModMenus;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.ari.risinggraves.networking.Networking;
-
-
-
-
+import net.ari.risinggraves.perks.PerkSelectionScreen;
+import net.ari.risinggraves.barrier.ModMenus;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.ari.risinggraves.block.wallbuy.WallbuyCostScreen;
+import net.minecraft.client.renderer.RenderType;
+import net.ari.risinggraves.barrier.ResetBlockadesCommand;
 
 
 import net.ari.risinggraves.init.ModEntities;
@@ -78,13 +80,13 @@ public class RisingGraves
 
     @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
-        SidebarScoreboard.init(event.getServer());
         ScoreboardHandler.INSTANCE.setServer(event.getServer());
 
     }
 
     private void registerCommands(RegisterCommandsEvent event) {
         WaveCommand.register(event.getDispatcher());
+        ResetBlockadesCommand.register(event.getDispatcher());
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -100,15 +102,21 @@ public class RisingGraves
         if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(ModBlocks.SAPPHIRE_ORE);
             event.accept(ModBlocks.BLOCK_OF_SAPPHIRE);
+            event.accept(ModBlocks.RUBY_ORE);
+            event.accept(ModBlocks.BLOCK_OF_RUBY);
+            event.accept(ModBlocks.CITRINE_ORE);
+            event.accept(ModBlocks.BLOCK_OF_CITRINE);
+            event.accept(ModBlocks.AMETHYST_ORE);
+            event.accept(ModBlocks.BLOCK_OF_AMETHYST);
             event.accept(ModBlocks.MYSTERY_CRATE);
-            event.accept(ModBlocks.CUSTOM_SPAWNER);
+            event.accept(ModBlocks.PERK_MACHINE);
+            event.accept(ModBlocks.WALLBUY);
         }
 
 
         {
             if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
                 event.accept(ModItems.BLOCKADE_WAND);
-                event.accept(ModItems.LIGHTER);
                 event.accept(ModItems.SAPPHIRE_AXE);
                 event.accept(ModItems.SAPPHIRE_PICKAXE);
                 event.accept(ModItems.SAPPHIRE_SHOVEL);
@@ -155,6 +163,9 @@ public class RisingGraves
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             MenuScreens.register(ModMenus.COST_MENU.get(), CostScreen::new);
+            MenuScreens.register(ModMenus.PERK_MENU.get(), PerkSelectionScreen::new);
+            MenuScreens.register(ModMenus.WALLBUY_MENU.get(), WallbuyCostScreen::new);
+
         }
 
     @SubscribeEvent

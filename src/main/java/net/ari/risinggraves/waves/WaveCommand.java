@@ -10,6 +10,13 @@ import net.ari.risinggraves.init.ModEntities;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.network.chat.Component;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 
@@ -24,20 +31,39 @@ import net.ari.risinggraves.scoreboard.SidebarScoreboard;
 public class WaveCommand {
 	
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		
+
 		dispatcher.register(Commands.literal("startwaves")
 			.executes(context -> {
-			ServerLevel level = context.getSource().getLevel();
-			ServerPlayer player = context.getSource().getPlayer();
+				ServerLevel level = context.getSource().getLevel();
+				ServerPlayer player = context.getSource().getPlayer();
 
-			WaveManager.startWaves(level);
+				// Activate waves mode
+				WaveManager.wavesActive = true;
 
-			// Force scoreboard to appear
-			int points = ScoreboardHandler.INSTANCE.getPoints(player.getName().getString());
-			SidebarScoreboard.update(player, points);
+				// Give starter weapon
+				ItemStack starter = new ItemStack(Items.WOODEN_PICKAXE);
+				starter.enchant(Enchantments.UNBREAKING, 3);
+				starter.setHoverName(Component.literal("Starter Pick"));
 
-			return 1;
-		}));
+				for (ServerPlayer p : level.players()) {
+					p.getInventory().add(starter.copy());
+				}
+
+				// Show scoreboard
+				int points = ScoreboardHandler.INSTANCE.getPoints(player.getName().getString());
+				SidebarScoreboard.update(player, points);
+
+				// Delay before first wave starts
+				Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+					if (WaveManager.wavesActive) {
+						WaveManager.startWaves(level);
+					}
+				}, 5, TimeUnit.SECONDS); // 5 second delay
+
+				return 1;
+			}));
+
+
 
 		dispatcher.register(Commands.literal("stopwaves")
 			.executes(context -> {

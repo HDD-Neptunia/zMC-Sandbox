@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A A",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": { "item": "risinggraves:sapphire" }
+  },
+  "result": {
+    "item": "risinggraves:sapphire_chestplate",
+    "count": 1
+  }
+}

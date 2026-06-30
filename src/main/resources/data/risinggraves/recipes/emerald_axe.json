@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "BB ",
+    "BA ",
+    " A "
+  ],
+  "key": {
+    "A": { "item": "minecraft:stick" },
+    "B": { "item": "minecraft:emerald" }
+  },
+  "result": {
+    "item": "risinggraves:emerald_axe",
+    "count": 1
+  }
+}

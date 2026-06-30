@@ -13,6 +13,12 @@ import net.minecraftforge.registries.RegistryObject;
 import net.ari.risinggraves.RisingGraves;
 import net.ari.risinggraves.item.custom.tiers.Tiers;
 
+import net.ari.risinggraves.armour.ModArmourMaterials.SapphireArmorMaterial;
+import net.ari.risinggraves.armour.ModArmourMaterials.RubyArmorMaterial;
+import net.ari.risinggraves.armour.ModArmourMaterials.CitrineArmorMaterial;
+import net.ari.risinggraves.armour.ModArmourMaterials.AmethystArmorMaterial;
+
+
 
 
 
@@ -26,9 +32,6 @@ public class ModItems {
 
         public static final RegistryObject<Item> BLOCKADE_WAND =
                 ITEMS.register("blockade_wand", () -> new WandFunction(new Item.Properties()));
-
-        public static final RegistryObject<ShovelItem> WALLBUY_WAND = ITEMS.register ("wallbuy_wand",
-                () -> new ShovelItem(Tiers.SAPPHIRE, 2, 1.0f, new Item.Properties()));
 
 
         public static final RegistryObject<Item> SAPPHIRE = ITEMS.register ("sapphire",
@@ -46,17 +49,21 @@ public class ModItems {
         public static final RegistryObject<PickaxeItem> SAPPHIRE_PICKAXE = ITEMS.register ("sapphire_pickaxe",
                 () -> new PickaxeItem(Tiers.SAPPHIRE, 2, 1.2f, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> SAPPHIRE_HELMET = ITEMS.register ("sapphire_helmet",
-                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
-        
-        public static final RegistryObject<PickaxeItem> SAPPHIRE_CHESTPLATE = ITEMS.register ("sapphire_chestplate",
-                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> SAPPHIRE_HELMET =
+                ITEMS.register("sapphire_helmet",
+                        () -> new ArmorItem(SapphireArmorMaterial.SAPPHIRE, EquipmentSlot.HEAD, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> SAPPHIRE_LEGGINGS = ITEMS.register ("sapphire_leggings",
-                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> SAPPHIRE_CHESTPLATE =
+                ITEMS.register("sapphire_chestplate",
+                        () -> new ArmorItem(SapphireArmorMaterial.SAPPHIRE, EquipmentSlot.CHEST, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> SAPPHIRE_BOOTS = ITEMS.register ("sapphire_boots",
-                () -> new PickaxeItem(Tiers.SAPPHIRE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> SAPPHIRE_LEGGINGS =
+                ITEMS.register("sapphire_leggings",
+                        () -> new ArmorItem(SapphireArmorMaterial.SAPPHIRE, EquipmentSlot.LEGS, new Item.Properties()));
+
+        public static final RegistryObject<Item> SAPPHIRE_BOOTS =
+                ITEMS.register("sapphire_boots",
+                        () -> new ArmorItem(SapphireArmorMaterial.SAPPHIRE, EquipmentSlot.FEET, new Item.Properties()));
 
 
 
@@ -101,17 +108,21 @@ public class ModItems {
         public static final RegistryObject<PickaxeItem> AMETHYST_PICKAXE = ITEMS.register ("amethyst_pickaxe",
                 () -> new PickaxeItem(Tiers.AMETHYST, 2, 1.1f, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> AMETHYST_HELMET = ITEMS.register ("amethyst_helmet",
-                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
-        
-        public static final RegistryObject<PickaxeItem> AMETHYST_CHESTPLATE = ITEMS.register ("amethyst_chestplate",
-                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> AMETHYST_HELMET =
+                ITEMS.register("amethyst_helmet",
+                        () -> new ArmorItem(AmethystArmorMaterial.AMETHYST, EquipmentSlot.HEAD, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> AMETHYST_LEGGINGS = ITEMS.register ("amethyst_leggings",
-                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> AMETHYST_CHESTPLATE =
+                ITEMS.register("amethyst_chestplate",
+                        () -> new ArmorItem(AmethystArmorMaterial.AMETHYST, EquipmentSlot.CHEST, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> AMETHYST_BOOTS = ITEMS.register ("amethyst_boots",
-                () -> new PickaxeItem(Tiers.AMETHYST, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> AMETHYST_LEGGINGS =
+                ITEMS.register("amethyst_leggings",
+                        () -> new ArmorItem(AmethystArmorMaterial.AMETHYST, EquipmentSlot.LEGS, new Item.Properties()));
+
+        public static final RegistryObject<Item> AMETHYST_BOOTS =
+                ITEMS.register("amethyst_boots",
+                        () -> new ArmorItem(AmethystArmorMaterial.AMETHYST, EquipmentSlot.FEET, new Item.Properties()));
 
 
 
@@ -130,17 +141,22 @@ public class ModItems {
         public static final RegistryObject<PickaxeItem> RUBY_PICKAXE = ITEMS.register ("ruby_pickaxe",
                 () -> new PickaxeItem(Tiers.RUBY, 3, 1.0f, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> RUBY_HELMET = ITEMS.register ("ruby_helmet",
-                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
-        
-        public static final RegistryObject<PickaxeItem> RUBY_CHESTPLATE = ITEMS.register ("ruby_chestplate",
-                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> RUBY_HELMET =
+                ITEMS.register("ruby_helmet",
+                        () -> new ArmorItem(RubyArmorMaterial.RUBY, EquipmentSlot.HEAD, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> RUBY_LEGGINGS = ITEMS.register ("ruby_leggings",
-                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> RUBY_CHESTPLATE =
+                ITEMS.register("ruby_chestplate",
+                        () -> new ArmorItem(RubyArmorMaterial.RUBY, EquipmentSlot.CHEST, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> RUBY_BOOTS = ITEMS.register ("ruby_boots",
-                () -> new PickaxeItem(Tiers.RUBY, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> RUBY_LEGGINGS =
+                ITEMS.register("ruby_leggings",
+                        () -> new ArmorItem(RubyArmorMaterial.RUBY, EquipmentSlot.LEGS, new Item.Properties()));
+
+        public static final RegistryObject<Item> RUBY_BOOTS =
+                ITEMS.register("ruby_boots",
+                        () -> new ArmorItem(RubyArmorMaterial.RUBY, EquipmentSlot.FEET, new Item.Properties()));
+
 
 
 
@@ -159,17 +175,21 @@ public class ModItems {
         public static final RegistryObject<PickaxeItem> CITRINE_PICKAXE = ITEMS.register ("citrine_pickaxe",
                 () -> new PickaxeItem(Tiers.CITRINE, 3, 1.3f, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> CITRINE_HELMET = ITEMS.register ("citrine_helmet",
-                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
-        
-        public static final RegistryObject<PickaxeItem> CITRINE_CHESTPLATE = ITEMS.register ("citrine_chestplate",
-                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
+       public static final RegistryObject<Item> CITRINE_HELMET =
+                ITEMS.register("citrine_helmet",
+                        () -> new ArmorItem(CitrineArmorMaterial.CITRINE, EquipmentSlot.HEAD, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> CITRINE_LEGGINGS = ITEMS.register ("citrine_leggings",
-                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> CITRINE_CHESTPLATE =
+                ITEMS.register("citrine_chestplate",
+                        () -> new ArmorItem(CitrineArmorMaterial.CITRINE, EquipmentSlot.CHEST, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> CITRINE_BOOTS = ITEMS.register ("citrine_boots",
-                () -> new PickaxeItem(Tiers.CITRINE, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> CITRINE_LEGGINGS =
+                ITEMS.register("citrine_leggings",
+                        () -> new ArmorItem(CitrineArmorMaterial.CITRINE, EquipmentSlot.LEGS, new Item.Properties()));
+
+        public static final RegistryObject<Item> CITRINE_BOOTS =
+                ITEMS.register("citrine_boots",
+                        () -> new ArmorItem(CitrineArmorMaterial.CITRINE, EquipmentSlot.FEET, new Item.Properties()));
 
 
     public static void register(IEventBus eventBus) {

@@ -6,15 +6,17 @@ import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+
 
 public class SidebarScoreboard {
 
     private static Objective objective;
 
     public static void init(MinecraftServer server) {
+
         Scoreboard board = server.getScoreboard();
 
-        // Check if objective already exists
         objective = board.getObjective("rg_points");
         if (objective == null) {
             objective = board.addObjective(
@@ -25,7 +27,8 @@ public class SidebarScoreboard {
             );
         }
 
-        board.setDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR, objective);
+        // ❌ REMOVE THIS:
+        // board.setDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR, objective);
     }
 
     public static void update(ServerPlayer player, int points) {
@@ -34,16 +37,14 @@ public class SidebarScoreboard {
     }
 
     public static void show(ServerPlayer player) {
-        player.getScoreboard().setDisplayObjective(DisplaySlot.SIDEBAR, objective);
+        player.getScoreboard().setDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR, objective);
     }
 
     public static void hide(ServerPlayer player) {
-        player.getScoreboard().setDisplayObjective(DisplaySlot.SIDEBAR, null);
+        player.getScoreboard().setDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR, null);
     }
 
     public static void clear(ServerPlayer player) {
         hide(player);
     }
-
 }
-

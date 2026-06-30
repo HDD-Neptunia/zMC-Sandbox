@@ -21,6 +21,7 @@ public class CostScreen extends AbstractContainerScreen<CostMenu> {
         this.menu = menu;
     }
 
+
     @Override
     protected void init() {
         super.init();
@@ -58,7 +59,7 @@ public class CostScreen extends AbstractContainerScreen<CostMenu> {
         try {
             int cost = Integer.parseInt(costField.getValue());
             Networking.CHANNEL.sendToServer(
-                new ConfirmCostPacket(cost, menu.getCollectedBlocks())
+                new ConfirmCostPacket(cost, menu.getCollectedBlocks(), menu.getCollectedStates())
             );
             this.minecraft.player.closeContainer();
         } catch (NumberFormatException e) {

@@ -7,6 +7,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.ari.risinggraves.block.PerkMachineBlockEntity;
+import net.minecraft.client.gui.components.Button;
+import net.ari.risinggraves.networking.PerkSelectionPacket;
+import net.ari.risinggraves.block.PerkMachineBlockEntity;
 
 public class PerkSelectionScreen extends AbstractContainerScreen<PerkSelectionMenu> {
 
@@ -27,13 +30,18 @@ public class PerkSelectionScreen extends AbstractContainerScreen<PerkSelectionMe
         addButton(x, y + 75, "Might", PerkType.MIGHT);
     }
 
+    private void onClicked(PerkType perk) {
+        // send packet to server
+        PerkSelectionPacket.send(perk);
+    }
+
     private void addButton(int x, int y, String name, PerkType perk) {
-        this.addRenderableWidget(new Button(x, y, 120, 20,
-                Component.literal(name),
-                btn -> {
-                    PerkSelectionPacket.send(perk);
-                    this.minecraft.player.closeContainer();
-                }));
+        this.addRenderableWidget(
+            Button.builder(Component.literal(name), btn -> onClicked(perk))
+                .bounds(x, y, 120, 20)
+                .build()
+            );
+
     }
 
     @Override

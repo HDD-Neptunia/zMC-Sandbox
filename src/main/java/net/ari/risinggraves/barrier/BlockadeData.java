@@ -7,6 +7,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Blocks;
+
 
 
 import java.util.ArrayList;
@@ -51,6 +56,7 @@ public class BlockadeData extends SavedData {
         this.clusters = clusters;
     }
 
+
     public static BlockadeData load(CompoundTag tag) {
         BlockadeData data = new BlockadeData();
 
@@ -63,17 +69,34 @@ public class BlockadeData extends SavedData {
 
             ListTag blocksList = clusterTag.getList("blocks", Tag.TAG_COMPOUND);
             List<BlockPos> blocks = new ArrayList<>();
+            List<BlockState> states = new ArrayList<>(); // <-- NEW
 
             for (Tag bt : blocksList) {
                 CompoundTag b = (CompoundTag) bt;
+
+                // existing
                 blocks.add(new BlockPos(b.getInt("x"), b.getInt("y"), b.getInt("z")));
+
+                // NEW
+                if (b.contains("state")) {
+                    states.add(NbtUtils.readBlockState(
+                        BuiltInRegistries.BLOCK.asLookup(),
+                        b.getCompound("state")
+                    ));
+                } else {
+                    // fallback for old clusters
+                    System.out.println("FALLBACK TRIGGERED: cluster entry missing state tag at " 
+                        + b.getInt("x") + "," + b.getInt("y") + "," + b.getInt("z"));
+                    states.add(Blocks.AIR.defaultBlockState());
+                }
             }
 
-            data.clusters.add(new BlockadeCluster(blocks, cost));
+            data.clusters.add(new BlockadeCluster(blocks, states, cost));
         }
 
         return data;
     }
+
 
     @Override
     public CompoundTag save(CompoundTag tag) {
@@ -84,11 +107,17 @@ public class BlockadeData extends SavedData {
             clusterTag.putInt("cost", cluster.cost);
 
             ListTag blocksList = new ListTag();
-            for (BlockPos pos : cluster.blocks) {
+            for (int i = 0; i < cluster.blocks.size(); i++) {
+                BlockPos pos = cluster.blocks.get(i);
+                BlockState state = cluster.states.get(i);
+
                 CompoundTag b = new CompoundTag();
                 b.putInt("x", pos.getX());
                 b.putInt("y", pos.getY());
                 b.putInt("z", pos.getZ());
+
+                b.put("state", NbtUtils.writeBlockState(state));
+
                 blocksList.add(b);
             }
 

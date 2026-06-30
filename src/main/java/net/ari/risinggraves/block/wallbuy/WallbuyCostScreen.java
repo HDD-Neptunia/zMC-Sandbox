@@ -8,6 +8,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.world.item.ItemStack;
+import net.ari.risinggraves.networking.WallbuyConfirmPacket;
+
 
 public class WallbuyCostScreen extends AbstractContainerScreen<WallbuyCostMenu> {
 
@@ -34,20 +38,17 @@ public class WallbuyCostScreen extends AbstractContainerScreen<WallbuyCostMenu> 
         this.addRenderableWidget(this.costField);
 
         // Confirm button
-        this.addRenderableWidget(new Button(
-                this.leftPos + 10,
-                this.topPos + 40,
-                80,
-                20,
-                Component.literal("Confirm"),
-                btn -> onConfirmPressed()
-        ));
+        this.addRenderableWidget(
+            Button.builder(Component.literal("Confirm"), btn -> onConfirmPressed())
+                .bounds(this.leftPos + 10, this.topPos + 40, 120, 20)
+                .build()
+        );
     }
 
     private void onConfirmPressed() {
         try {
             int cost = Integer.parseInt(costField.getValue());
-            WallbuyConfirmPacket.send(menu.getItem(), cost);
+            WallbuyConfirmPacket.send(new ItemStack(menu.getItem()), cost);
             this.minecraft.player.closeContainer();
         } catch (NumberFormatException e) {
             this.minecraft.player.displayClientMessage(

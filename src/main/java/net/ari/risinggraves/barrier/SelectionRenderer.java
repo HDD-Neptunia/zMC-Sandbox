@@ -44,20 +44,39 @@ public class SelectionRenderer {
         if (!(held.getItem() instanceof WandFunction)) return;
 
         CompoundTag tag = held.getOrCreateTag();
+        int activeCluster = tag.getInt("activeCluster");
+        BlockadeData data = BlockadeData.get(level);
+
         ListTag list = tag.getList("selected", Tag.TAG_COMPOUND);
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource buffer = mc.renderBuffers().bufferSource();
 
-        for (int i = 0; i < list.size(); i++) {
-            CompoundTag b = list.getCompound(i);
-            BlockPos pos = new BlockPos(b.getInt("x"), b.getInt("y"), b.getInt("z"));
+        for (int clusterId = 0; clusterId < data.clusters.size(); clusterId++) {
+            BlockadeCluster cluster = data.clusters.get(clusterId);
 
-            renderOutline(poseStack, buffer, pos);
+            for (BlockPos pos : cluster.blocks) {
+
+                float r, g, b;
+
+                if (clusterId == activeCluster) {
+                    // ⭐ Active cluster → GREEN
+                    r = 0f; g = 1f; b = 0f;
+                } else if (cluster.purchased) {
+                    // ⭐ Purchased cluster → RED
+                    r = 1f; g = 0f; b = 0f;
+                } else {
+                    // ⭐ Other clusters → YELLOW
+                    r = 1f; g = 1f; b = 0f;
+                }
+
+                renderOutline(poseStack, buffer, pos, r, g, b);
+            }
         }
+
     }
 
-    private static void renderOutline(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos) {
+    private static void renderOutline(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos, float r, float g, float b) {
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
 
@@ -73,8 +92,9 @@ public class SelectionRenderer {
             buffer.getBuffer(RenderType.lines()),
             0, 0, 0,
             1, 1, 1,
-            1f, 1f, 0f, 1f // yellow outline
+            r, g, b, 1f
         );
+
 
         poseStack.popPose();
     }

@@ -1,4 +1,4 @@
-package net.ari.risinggraves.client;
+package net.ari.risinggraves.hud;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -20,27 +20,34 @@ public class WaveDebugOverlay {
         if (mc.player == null) return;
 
         PoseStack pose = event.getPoseStack();
+        Gui gui = mc.gui;
 
         int x = 10;
         int y = 10;
 
-        Gui gui = mc.gui;
+        int bgColor = 0x44000000;     // translucent black
+        int borderColor = 0x55FFFFFF; // faint white border
+        int titleColor = 0xE6C46A;    // soft gold
+        int textColor = 0xDDDDDD;     // soft grey
 
-        gui.drawString(pose, mc.font, "Prepare to die.", x, y, 0xFFFFFF);
+        // ⭐ Background box (Forge 1.19.3 way)
+        Gui.fill(pose, x - 6, y - 6, x + 130, y + 46, bgColor);
+
+        // ⭐ Border (Forge 1.19.3 way)
+        Gui.fill(pose, x - 6, y - 6, x + 130, y - 5, borderColor); // top
+        Gui.fill(pose, x - 6, y + 45, x + 130, y + 46, borderColor); // bottom
+        Gui.fill(pose, x - 6, y - 6, x - 5, y + 46, borderColor); // left
+        Gui.fill(pose, x + 129, y - 6, x + 130, y + 46, borderColor); // right
+
+        // ⭐ Title
+        gui.drawString(pose, mc.font, "§6Zombies", x, y, titleColor);
+        y += 14;
+
+        // ⭐ Wave
+        gui.drawString(pose, mc.font, "Wave: " + WaveManager.getCurrentWave(), x, y, textColor);
         y += 12;
 
-        gui.drawString(pose, mc.font, "Wave: " + WaveManager.getCurrentWave(), x, y, 0xFFFFFF);
-        y += 12;
-
-        gui.drawString(pose, mc.font, "Alive: " + WaveManager.getZombiesAlive(), x, y, 0xFFFFFF);
-        y += 12;
-
-        gui.drawString(pose, mc.font, "Left to spawn: " + WaveManager.getZombiesLeftToSpawn(), x, y, 0xFFFFFF);
-        y += 12;
-
-        gui.drawString(pose, mc.font, "Can spawn more: " + WaveManager.canSpawnMore(), x, y, 0xFFFFFF);
-        y += 12;
-
-        gui.drawString(pose, mc.font, "Wave in progress: " + WaveManager.isWaveInProgress(), x, y, 0xFFFFFF);
+        // ⭐ Alive
+        gui.drawString(pose, mc.font, "Alive: " + WaveManager.getZombiesAlive(), x, y, textColor);
     }
 }

@@ -13,7 +13,12 @@ import net.ari.risinggraves.barrier.ModMenus;
 import net.ari.risinggraves.networking.Networking;
 import net.ari.risinggraves.networking.SyncBlockadesPacket;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
 
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -29,6 +34,8 @@ public class CostMenu extends AbstractContainerMenu {
     private final Player player;
     private final Level level;
     private final List<BlockPos> collectedBlocks;
+    private final List<BlockState> collectedStates;
+
 
     public CostMenu(int id, Inventory inv, Player player, CompoundTag wandTag) {
         super(ModMenus.COST_MENU.get(), id);
@@ -36,6 +43,7 @@ public class CostMenu extends AbstractContainerMenu {
         this.player = player;
         this.level = player.level;
         this.collectedBlocks = readBlocksFromTag(wandTag);
+        this.collectedStates = readStatesFromTag(wandTag);
     }
 
     public CostMenu(int id, Inventory inv) {
@@ -46,6 +54,7 @@ public class CostMenu extends AbstractContainerMenu {
 
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         this.collectedBlocks = readBlocksFromTag(tag);
+        this.collectedStates = readStatesFromTag(tag);
     }
 
 
@@ -60,6 +69,33 @@ public class CostMenu extends AbstractContainerMenu {
 
         return list;
     }
+
+    private List<BlockState> readStatesFromTag(CompoundTag tag) {
+        List<BlockState> list = new ArrayList<>();
+        ListTag blocks = tag.getList("selected", Tag.TAG_COMPOUND);
+
+        for (int i = 0; i < blocks.size(); i++) {
+            CompoundTag b = blocks.getCompound(i);
+
+            if (b.contains("state")) {
+                list.add(NbtUtils.readBlockState(
+                    BuiltInRegistries.BLOCK.asLookup(),
+                    b.getCompound("state")
+                ));
+            } else {
+                list.add(level.getBlockState(new BlockPos(
+                    b.getInt("x"), b.getInt("y"), b.getInt("z")
+                )));
+            }
+        }
+
+        return list;
+    }
+
+    public List<BlockState> getCollectedStates() {
+        return collectedStates;
+    }
+
 
     public List<BlockPos> getCollectedBlocks() {
         return collectedBlocks;

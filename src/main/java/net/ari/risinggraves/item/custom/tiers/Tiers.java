@@ -4,6 +4,8 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.ari.risinggraves.item.ModItems;
+import net.minecraft.world.item.Items;
+
 
 public class Tiers {
     public static final Tier SAPPHIRE = new ForgeTier(
@@ -41,6 +43,15 @@ public class Tiers {
             10,
             null,
             () -> Ingredient.of(ModItems.CITRINE.get()));
+
+        public static final Tier EMERALD = new ForgeTier(
+                5,
+                1667,
+                8.0f,
+                6,
+                27,
+                null,
+                () -> Ingredient.of(Items.EMERALD));
 }
 
 

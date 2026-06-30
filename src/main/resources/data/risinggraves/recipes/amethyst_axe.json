@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "BB ",
+    "BA ",
+    " A "
+  ],
+  "key": {
+    "A": { "item": "minecraft:stick" },
+    "B": { "item": "risinggraves:amethyst" }
+  },
+  "result": {
+    "item": "risinggraves:amethyst_axe",
+    "count": 1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A A",
+    "A A"
+  ],
+  "key": {
+    "A": { "item": "risinggraves:ruby" }
+  },
+  "result": {
+    "item": "risinggraves:ruby_leggings",
+    "count": 1
+  }
+}

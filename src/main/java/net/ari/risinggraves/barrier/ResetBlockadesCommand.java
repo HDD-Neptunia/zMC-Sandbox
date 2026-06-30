@@ -1,0 +1,55 @@
+package net.ari.risinggraves.barrier;
+
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.network.chat.Component;
+
+import net.ari.risinggraves.barrier.BlockadeData;
+import net.ari.risinggraves.barrier.BlockadeCluster;
+
+
+public class ResetBlockadesCommand {
+
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(
+            Commands.literal("resetblockades")
+                .requires(source -> source.hasPermission(2)) // OP only
+                .executes(ctx -> reset(ctx.getSource()))
+        );
+    }
+
+    private static int reset(CommandSourceStack source) {
+        ServerLevel level = source.getLevel();
+        BlockadeData data = BlockadeData.get(level);
+
+        int restored = 0;
+
+        for (BlockadeCluster cluster : data.getClusters()) {
+            System.out.println("Cluster states size = " + cluster.states.size());
+
+            for (int i = 0; i < cluster.blocks.size(); i++) {
+                BlockPos pos = cluster.blocks.get(i);
+                BlockState state = cluster.states.get(i);
+
+                System.out.println("Placing state: " + state); // DEBUG
+
+                level.setBlock(pos, state, 3);
+                restored++;
+            }
+            cluster.purchased = false;
+        }
+
+        source.sendSuccess(
+            Component.literal("§aRegenerated " + restored + " blockade blocks."),
+            true
+        );
+
+        return restored;
+    }
+}

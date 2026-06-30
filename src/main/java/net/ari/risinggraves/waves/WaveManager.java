@@ -7,6 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.ari.risinggraves.zombies.CZombieDeathEvent;
+import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+import net.minecraft.server.level.ServerPlayer;
+import net.ari.risinggraves.scoreboard.SidebarScoreboard;
+
+
+
 
 
 public class WaveManager {
@@ -31,9 +37,11 @@ public class WaveManager {
         currentLevel = level;
         currentWave = 1;
 
+        SidebarScoreboard.init(level.getServer());
         // Show scoreboard for all players
         for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
             int points = ScoreboardHandler.INSTANCE.getPoints(player.getName().getString());
+            SidebarScoreboard.show(player);
             SidebarScoreboard.update(player, points);
         }
 
@@ -104,17 +112,32 @@ public class WaveManager {
 	}
 
     private static void startNextWave() {
-		waveInProgress = false;
+    waveInProgress = false;
 
-		System.out.println("Wave " + currentWave + " complete! Next wave in 5 seconds.");
+    System.out.println("Wave " + currentWave + " complete! Next wave in 10 seconds.");
 
-		Executors.newSingleThreadScheduledExecutor()
-			.schedule(() -> {
-				if (!wavesActive) return;
-				currentWave++;          // increment HERE, not before
-				maxActiveZombies = Math.min(24, 6 + currentWave); // pacing increase
-				startWave();            // now start the wave
-			}, 5, TimeUnit.SECONDS);
-		}
+    Executors.newSingleThreadScheduledExecutor()
+        .schedule(() -> {
+            if (!wavesActive) return;
+
+            currentWave++;          
+            maxActiveZombies = Math.min(24, 6 + currentWave);
+
+            // 🔥 ROUND START INDICATOR 🔥
+            for (ServerPlayer p : currentLevel.getServer().getPlayerList().getPlayers()) {
+                // ominous round stinger
+                p.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 1.0F, 1.2F);
+
+                // subtle action bar message
+                p.displayClientMessage(
+                    net.minecraft.network.chat.Component.literal("§6Wave " + currentWave + " begins!"),
+                    true
+                );
+            }
+
+            startWave();            
+        }, 10, TimeUnit.SECONDS);
+    }
+
 
 }

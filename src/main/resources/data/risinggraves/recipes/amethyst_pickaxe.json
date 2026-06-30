@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    " A ",
+    " A "
+  ],
+  "key": {
+    "A": { "item": "minecraft:stick" },
+    "B": { "item": "risinggraves:amethyst" }
+  },
+  "result": {
+    "item": "risinggraves:amethyst_pickaxe",
+    "count": 1
+  }
+}

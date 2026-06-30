@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "BB ",
+    "BA ",
+    " A "
+  ],
+  "key": {
+    "A": { "item": "minecraft:stick" },
+    "B": { "item": "risinggraves:citrine" }
+  },
+  "result": {
+    "item": "risinggraves:citrine_axe",
+    "count": 1
+  }
+}

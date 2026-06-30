@@ -9,11 +9,12 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.function.Supplier;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraft.world.item.Item;
-
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.core.BlockPos;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -22,29 +23,53 @@ public class ConfirmCostPacket {
 
     private final int cost;
     private final List<BlockPos> blocks;
+    public final List<BlockState> states;
 
-    public ConfirmCostPacket(int cost, List<BlockPos> blocks) {
+
+    public ConfirmCostPacket(int cost, List<BlockPos> blocks, List<BlockState> states) {
         this.cost = cost;
         this.blocks = blocks;
+        this.states = states;
     }
 
     public static void encode(ConfirmCostPacket msg, FriendlyByteBuf buf) {
         buf.writeInt(msg.cost);
+
+        // BLOCK POSITIONS
         buf.writeInt(msg.blocks.size());
         for (BlockPos pos : msg.blocks) {
             buf.writeBlockPos(pos);
         }
+
+        // BLOCK STATES
+        buf.writeInt(msg.states.size());
+        for (BlockState state : msg.states) {
+            buf.writeNbt(NbtUtils.writeBlockState(state));
+        }
     }
+
 
     public static ConfirmCostPacket decode(FriendlyByteBuf buf) {
         int cost = buf.readInt();
-        int size = buf.readInt();
+
+        // BLOCK POSITIONS
+        int blockCount = buf.readInt();
         List<BlockPos> blocks = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < blockCount; i++) {
             blocks.add(buf.readBlockPos());
         }
-        return new ConfirmCostPacket(cost, blocks);
+
+        // BLOCK STATES
+        int stateCount = buf.readInt();
+        List<BlockState> states = new ArrayList<>();
+        for (int i = 0; i < stateCount; i++) {
+            CompoundTag tag = buf.readNbt();
+            states.add(NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag));
+        }
+
+        return new ConfirmCostPacket(cost, blocks, states);
     }
+
 
     public static void handle(ConfirmCostPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
@@ -53,8 +78,14 @@ public class ConfirmCostPacket {
 
             BlockadeData data = BlockadeData.get(player.getCommandSenderWorld());
 
+            // ⭐ Create cluster
+            BlockadeCluster cluster = new BlockadeCluster(msg.blocks, msg.states, msg.cost);
 
-            data.addCluster(new BlockadeCluster(msg.blocks, msg.cost));
+            // ⭐ Mark purchased
+            cluster.purchased = true;
+
+            // ⭐ Add to SavedData
+            data.addCluster(cluster);
 
             // Sync back to client
             Networking.CHANNEL.send(
@@ -64,4 +95,5 @@ public class ConfirmCostPacket {
         });
         ctx.get().setPacketHandled(true);
     }
+
 }

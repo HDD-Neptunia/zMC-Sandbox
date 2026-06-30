@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "BB ",
+    "BA ",
+    " A "
+  ],
+  "key": {
+    "A": { "item": "minecraft:stick" },
+    "B": { "item": "risinggraves:ruby" }
+  },
+  "result": {
+    "item": "risinggraves:ruby_axe",
+    "count": 1
+  }
+}

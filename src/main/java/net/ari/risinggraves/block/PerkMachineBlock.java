@@ -11,6 +11,16 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.ari.risinggraves.block.PerkMachineBlockEntity;
+import net.ari.risinggraves.perks.PerkType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkHooks;
+import net.ari.risinggraves.perks.PerkCosts;
+import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+import net.ari.risinggraves.perks.PerkHandler;
+
+
+
 
 public class PerkMachineBlock extends Block implements EntityBlock {
 
@@ -24,6 +34,11 @@ public class PerkMachineBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        System.out.println("[BLOCK] onPlace client=" + level.isClientSide + " pos=" + pos);
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos,
                                 Player player, InteractionHand hand, BlockHitResult hit) {
 
@@ -34,7 +49,11 @@ public class PerkMachineBlock extends Block implements EntityBlock {
 
         // CREATIVE SETUP MODE — open perk selection UI
         if (player.isCreative()) {
-            player.openMenu(new PerkSelectionMenuProvider(machine));
+            NetworkHooks.openScreen(
+                (ServerPlayer) player,
+                machine,
+                buf -> buf.writeBlockPos(pos)   // <-- write BlockPos into the buffer
+            );
             return InteractionResult.SUCCESS;
         }
 

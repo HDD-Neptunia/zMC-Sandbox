@@ -7,6 +7,7 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.scores.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,7 @@ public class ScoreboardHandler {
         playerScores.put(playerName, updated);
 
         // Only update scoreboard if waves are active
-        if (WaveManager.wavesActive && server != null) {
+        if (server != null) {
             ServerPlayer player = server.getPlayerList().getPlayerByName(playerName);
             if (player != null) {
                 SidebarScoreboard.update(player, updated);

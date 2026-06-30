@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "risinggraves:block_of_sapphire" }
+  ],
+  "result": {
+    "item": "risinggraves:sapphire",
+    "count": 9
+  }
+}

@@ -32,6 +32,12 @@
   "item.risinggraves.ruby_axe": "Ruby Axe",
 
   "block.risinggraves.sapphire_ore": "Sapphire Ore",
+  "block.risinggraves.ruby_ore": "Ruby Ore",
+  "block.risinggraves.citrine_ore": "Citrine Ore",
+  "block.risinggraves.amethyst_ore": "Amethyst Ore",
   "block.risinggraves.block_of_sapphire": "Block of Sapphire",
+  "block.risinggraves.block_of_ruby": "Block of Ruby",
+  "block.risinggraves.block_of_citrine": "Block of Citrine",
+  "block.risinggraves.block_of_amethyst": "Block of Amethyst",
   "block.risinggraves.mystery_crate": "Mystery Crate"
 }

@@ -6,7 +6,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.ari.risinggraves.block.PerkMachineBlockEntity;
 import net.minecraft.client.gui.components.Button;
 import net.ari.risinggraves.networking.PerkSelectionPacket;
 import net.ari.risinggraves.block.PerkMachineBlockEntity;

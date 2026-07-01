@@ -78,6 +78,7 @@ public class SyncBlockadesPacket {
 
     public static void handle(SyncBlockadesPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
+            BlockadeData.CLIENT.getClusters().clear();
             BlockadeData.CLIENT.setClusters(msg.clusters);
         });
         ctx.get().setPacketHandled(true);

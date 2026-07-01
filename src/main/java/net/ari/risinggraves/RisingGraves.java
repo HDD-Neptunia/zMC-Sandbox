@@ -119,6 +119,7 @@ public class RisingGraves
         {
             if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
                 event.accept(ModItems.BLOCKADE_WAND);
+                event.accept(ModItems.LINKING_WAND);
                 event.accept(ModItems.SAPPHIRE_AXE);
                 event.accept(ModItems.SAPPHIRE_PICKAXE);
                 event.accept(ModItems.SAPPHIRE_SHOVEL);
@@ -167,6 +168,8 @@ public class RisingGraves
             MenuScreens.register(ModMenus.COST_MENU.get(), CostScreen::new);
             MenuScreens.register(ModMenus.PERK_MENU.get(), PerkSelectionScreen::new);
             MenuScreens.register(ModMenus.WALLBUY_MENU.get(), WallbuyCostScreen::new);
+
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.PERK_MACHINE.get(), RenderType.translucent());
 
         }
 

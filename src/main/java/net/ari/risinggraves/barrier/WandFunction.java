@@ -18,8 +18,13 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.PacketDistributor;
+
 
 import java.util.List;
+
+import net.ari.risinggraves.networking.Networking;
+import net.ari.risinggraves.networking.SyncBlockadesPacket;
 
 public class WandFunction extends Item {
 
@@ -49,8 +54,13 @@ public class WandFunction extends Item {
         int active = tag.getInt("activeCluster");
         int clusterId = findClusterAtPos(level, pos);
 
-        // only interact with active cluster if one is set
-        if (active >= 0 && clusterId != active) {
+        // SPRINT = switch active cluster
+        if (player.getPersistentData().getBoolean("sprintKeyDown")) {
+            int newCluster = findClusterAtPos(level, pos);
+            if (newCluster >= 0) {
+                tag.putInt("activeCluster", newCluster);
+                player.displayClientMessage(Component.literal("§eSwitched active barrier"), true);
+            }
             return InteractionResult.SUCCESS;
         }
 
@@ -60,41 +70,62 @@ public class WandFunction extends Item {
             player.displayClientMessage(Component.literal("§cCannot select purchased barrier"), true);
             return InteractionResult.SUCCESS;
         }
+        
+        // If clicking inside active cluster → DESELECT from cluster
+        if (active >= 0 && clusterId == active) {
+            BlockadeData data = BlockadeData.get(level);
+            BlockadeCluster cluster = data.getClusters().get(active);
 
-        // sprint = switch active cluster
-        if (player.isSprinting()) {
-            int newCluster = findClusterAtPos(level, pos);
-            if (newCluster >= 0) {
-                tag.putInt("activeCluster", newCluster);
-                player.displayClientMessage(Component.literal("§eSwitched active barrier"), true);
+            int idx = cluster.blocks.indexOf(pos);
+            if (idx >= 0) {
+                cluster.blocks.remove(idx);
+                cluster.states.remove(idx);
+                data.setDirty();
+
+                // NEW: If cluster is now empty, delete it entirely
+                if (cluster.blocks.isEmpty()) {
+                    data.getClusters().remove(active);
+
+                    // Reset active cluster on the wand
+                    tag.putInt("activeCluster", -1);
+
+                    // Sync updated cluster list
+                    Networking.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncBlockadesPacket(data.getClusters()));
+
+                    player.displayClientMessage(Component.literal("§cCluster removed"), true);
+                    return InteractionResult.SUCCESS;
+                }
+
+                // Normal sync if cluster still has blocks
+                Networking.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncBlockadesPacket(data.getClusters()));
+                player.displayClientMessage(Component.literal("§cRemoved block from active cluster"), true);
             }
+
             return InteractionResult.SUCCESS;
         }
 
-        // selection list
+        // If clicking outside active cluster → DO NOT add to active cluster
+        if (active >= 0 && clusterId != active) {
+            player.displayClientMessage(Component.literal("§cThis block is not part of the active cluster"), true);
+            return InteractionResult.SUCCESS;
+        }
+
+        // Otherwise: normal NEW cluster selection
         ListTag list = tag.getList("selected", ListTag.TAG_COMPOUND);
 
-        // toggle selection
-        boolean alreadySelected = false;
-        int indexToRemove = -1;
-
+        // check if already selected
         for (int i = 0; i < list.size(); i++) {
             CompoundTag e = list.getCompound(i);
 
             if (e.getInt("x") == pos.getX() &&
                 e.getInt("y") == pos.getY() &&
                 e.getInt("z") == pos.getZ()) {
-                alreadySelected = true;
-                indexToRemove = i;
-                break;
-            }
-        }
 
-        if (alreadySelected) {
-            list.remove(indexToRemove);
-            tag.put("selected", list);
-            player.displayClientMessage(Component.literal("§cRemoved block from selection"), true);
-            return InteractionResult.SUCCESS;
+                list.remove(i);
+                tag.put("selected", list);
+                player.displayClientMessage(Component.literal("§cRemoved block from selection"), true);
+                return InteractionResult.SUCCESS;
+            }
         }
 
         // save block + state
@@ -114,7 +145,6 @@ public class WandFunction extends Item {
 
         return InteractionResult.SUCCESS;
     }
-
 
     private int findClusterAtPos(Level level, BlockPos pos) {
         BlockadeData data = BlockadeData.get(level);
@@ -173,32 +203,4 @@ public class WandFunction extends Item {
 
         return InteractionResultHolder.success(stack);
     }
-
-
-
-    /*@Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        CompoundTag tag = stack.getOrCreateTag();
-
-        if (!player.isShiftKeyDown())
-            return InteractionResultHolder.pass(stack);
-
-        int active = tag.getInt("activeCluster");
-        if (active < 0) {
-            player.displayClientMessage(Component.literal("§cNo active barrier selected"), true);
-            return InteractionResultHolder.pass(stack);
-        }
-
-        CompoundTag clusterTag = getClusterTag(level, active);
-
-        if (!level.isClientSide) {
-            NetworkHooks.openScreen((ServerPlayer) player, new CostMenuProvider(clusterTag), buf -> {
-                buf.writeNbt(clusterTag);
-            });
-        }
-
-        return InteractionResultHolder.success(stack);
-    } */
 }
-

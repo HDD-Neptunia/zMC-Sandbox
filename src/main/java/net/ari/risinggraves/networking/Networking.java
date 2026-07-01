@@ -56,6 +56,14 @@ public class Networking {
             WallbuyConfirmPacket::decode,
             WallbuyConfirmPacket::handle
         );
+
+        CHANNEL.registerMessage(
+            id++,
+            SprintKeyPacket.class,
+            SprintKeyPacket::encode,
+            SprintKeyPacket::decode,
+            SprintKeyPacket::handle
+        );
     }
 }
 

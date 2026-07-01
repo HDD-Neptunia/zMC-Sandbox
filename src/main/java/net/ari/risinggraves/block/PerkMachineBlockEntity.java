@@ -71,15 +71,24 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        System.out.println("[BE] load CLIENT=" + level.isClientSide + " pos=" + worldPosition + " TAG=" + tag);
+
+        // DO NOT USE level HERE, IT'S NULL DURING CHUNK LOAD
 
         if (tag.contains("perk")) {
-            this.perk = PerkType.valueOf(tag.getString("perk"));
-            System.out.println("[BE] load: perk=" + this.perk + " at " + worldPosition + " (client=" + level.isClientSide + ")");
-        } else {
-            System.out.println("[BE] load: NO 'perk' key at " + worldPosition);
+            String s = tag.getString("perk");
+            try {
+                this.perk = PerkType.valueOf(s);
+            } catch (IllegalArgumentException e) {
+                this.perk = PerkType.NONE;
+            }
         }
+
+        // If you want logging, don't rely on level:
+        System.out.println("[BE] load: perk=" + this.perk + " (client=" + (this.level != null && this.level.isClientSide) + ")");
     }
+
+
+
 
     @Override
     public void onLoad() {

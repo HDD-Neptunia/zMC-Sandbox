@@ -17,6 +17,7 @@ import net.ari.risinggraves.armour.ModArmourMaterials.SapphireArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.RubyArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.CitrineArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.AmethystArmorMaterial;
+import net.ari.risinggraves.block.LWandFunction;
 
 
 
@@ -32,6 +33,10 @@ public class ModItems {
 
         public static final RegistryObject<Item> BLOCKADE_WAND =
                 ITEMS.register("blockade_wand", () -> new WandFunction(new Item.Properties()));
+
+        public static final RegistryObject<Item> LINKING_WAND =
+                ITEMS.register("linking_wand", () -> new LWandFunction(new Item.Properties()));
+
 
         public static final RegistryObject<SwordItem> DEBUG_WEAPON = ITEMS.register ("debug_weapon",
                 () -> new SwordItem(Tiers.SAPPHIRE, 200, 2.0f, new Item.Properties()));

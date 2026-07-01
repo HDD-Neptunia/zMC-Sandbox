@@ -91,7 +91,7 @@ public class ConfirmCostPacket {
             if (stack.getItem() instanceof WandFunction) {
                 CompoundTag tag = stack.getOrCreateTag();
                 tag.remove("selected");
-                tag.putInt("activeCluster", data.getClusters().size() - 1);
+                tag.putInt("activeCluster", -1);
             }
 
             // ⭐ Sync back to client

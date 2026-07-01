@@ -10,6 +10,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.nbt.CompoundTag;
+import net.ari.risinggraves.barrier.DoorData;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,8 @@ import java.util.List;
 public class CustomSpawnerBlockEntity extends BlockEntity {
 
     private int cooldown = 0;
+    private BlockPos linkedDoor = null;
+
 
     // GLOBAL LIST OF ALL SPAWNERS
     public static final List<BlockPos> ALL_SPAWNERS = new ArrayList<>();
@@ -25,7 +30,37 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
         super(ModBlockEntities.CUSTOM_SPAWNER.get(), pos, state);
     }
 
+    public void setLinkedDoor(BlockPos pos) {
+        this.linkedDoor = pos;
+    }
+
+    public BlockPos getLinkedDoor() {
+        return linkedDoor;
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+
+        if (linkedDoor != null) {
+            tag.putInt("doorX", linkedDoor.getX());
+            tag.putInt("doorY", linkedDoor.getY());
+            tag.putInt("doorZ", linkedDoor.getZ());
+        }
+    }
+
     public void tickServer() {
+        if (cooldown > 0) {
+            cooldown--;
+            return;
+        }
+
+        if (linkedDoor != null) {
+            if (!DoorData.get(level).isDoorPurchased(linkedDoor)) {
+                return; // spawner stays inactive
+            }
+        }
+
         if (cooldown > 0) {
             cooldown--;
             return;
@@ -33,13 +68,18 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
 
         if (!WaveManager.isWaveInProgress()) return;
         if (!WaveManager.canSpawnMore()) return;
-        if (WaveManager.shouldSpawnTank() && WaveManager.getZombiesAlive() == 0) {
+        // Spawn boss zombies first, before normal zombies
+        if (WaveManager.bossCountThisWave > 0 && WaveManager.getZombiesAlive() == 0) {
+
             spawnTankZombie(level, worldPosition);
+
             WaveManager.onZombieSpawned();
-            WaveManager.spawnTankThisWave = false;
+            WaveManager.bossCountThisWave--;
+
             cooldown = 40;
             return;
         }
+
 
 
         spawnCZombie(level, worldPosition);

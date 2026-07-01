@@ -19,41 +19,91 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+
 
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = "risinggraves", value = Dist.CLIENT)
 public class SelectionRenderer {
 
-    @SubscribeEvent
-    public static void onRenderLevel(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS)
-            return;
+@SubscribeEvent
+public static void onRenderLevel(RenderLevelStageEvent event) {
+    if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS)
+        return;
 
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-        Level level = mc.level;
+    Minecraft mc = Minecraft.getInstance();
+    Player player = mc.player;
+    Level level = mc.level;
 
-        if (player == null || level == null) return;
+    if (player == null || level == null) return;
 
-        // Only render when holding the wand
-        ItemStack held = player.getMainHandItem();
-        if (!(held.getItem() instanceof WandFunction)) return;
+    // Only render when holding the wand
+    ItemStack held = player.getMainHandItem();
+    if (!(held.getItem() instanceof WandFunction)) return;
 
-        CompoundTag tag = held.getOrCreateTag();
-        ListTag list = tag.getList("selected", ListTag.TAG_COMPOUND);
+    // Get wand tag once
+    CompoundTag tag = held.getOrCreateTag();
+    ListTag list = tag.getList("selected", ListTag.TAG_COMPOUND);
 
-        PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource buffer = mc.renderBuffers().bufferSource();
+    // Prepare renderer BEFORE sprint logic
+    PoseStack poseStack = event.getPoseStack();
+    MultiBufferSource buffer = mc.renderBuffers().bufferSource();
 
-        for (int i = 0; i < list.size(); i++) {
-            CompoundTag b = list.getCompound(i);
-            BlockPos pos = new BlockPos(b.getInt("x"), b.getInt("y"), b.getInt("z"));
+    // SPRINT = highlight all clusters
+    if (mc.options.keySprint.isDown()) {
+        int activeCluster = tag.getInt("activeCluster");
 
-            // plain yellow for now
+        BlockadeData data = BlockadeData.CLIENT;
+        List<BlockadeCluster> clusters = data.getClusters();
+        player.displayClientMessage(Component.literal("Clusters: " + clusters.size()), true);
+
+        for (int i = 0; i < clusters.size(); i++) {
+            BlockadeCluster cluster = clusters.get(i);
+
+            float r, g, b;
+
+            if (i == activeCluster) {
+                // active cluster = yellow
+                r = 1f; g = 1f; b = 0f;
+            } else {
+                // inactive clusters = blue
+                r = 0f; g = 0.5f; b = 1f;
+            }
+
+            for (BlockPos pos : cluster.blocks) {
+                renderOutline(poseStack, buffer, pos, r, g, b);
+            }
+        }
+
+        return; // stop normal selection rendering
+    }
+
+        // NORMAL RENDERING: show ACTIVE CLUSTER
+    int activeCluster = tag.getInt("activeCluster");
+
+    BlockadeData data = BlockadeData.CLIENT;
+    List<BlockadeCluster> clusters = data.getClusters();
+
+    if (activeCluster >= 0 && activeCluster < clusters.size()) {
+        BlockadeCluster cluster = clusters.get(activeCluster);
+
+        // active cluster = yellow
+        for (BlockPos pos : cluster.blocks) {
             renderOutline(poseStack, buffer, pos, 1f, 1f, 0f);
         }
     }
+
+    // ALSO render selected blocks (your manual selection)
+    for (int i = 0; i < list.size(); i++) {
+        CompoundTag b = list.getCompound(i);
+        BlockPos pos = new BlockPos(b.getInt("x"), b.getInt("y"), b.getInt("z"));
+
+        renderOutline(poseStack, buffer, pos, 1f, 1f, 0f);
+    }
+
+}
+
 
 
     private static void renderOutline(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos,

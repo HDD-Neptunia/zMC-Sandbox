@@ -9,9 +9,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+import net.ari.risinggraves.barrier.DoorData;
+import net.minecraft.world.item.ItemStack;
 
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.barrier.BlockadeCluster;
+import net.ari.risinggraves.block.LWandFunction;
+import net.ari.risinggraves.item.custom.LinkingWandItem;
 
 
 
@@ -25,6 +29,14 @@ public class BlockadeEvents {
         BlockPos pos = event.getPos();
 
         if (level.isClientSide) return;
+
+        ItemStack held = player.getMainHandItem();
+        if (held.getItem() instanceof LWandFunction) {
+            return; // IMPORTANT: Do NOT cancel or consume the event
+        }
+
+        if (player.isCreative()) return;
+
 
         BlockadeData data = BlockadeData.get(level);
 
@@ -49,6 +61,8 @@ public class BlockadeEvents {
                 }
 
                 player.displayClientMessage(Component.literal("§aBlockade opened!"), true);
+
+                DoorData.get(level).markPurchased(pos);
 
                 // Remove the cluster from the list
                 cluster.purchased = true;

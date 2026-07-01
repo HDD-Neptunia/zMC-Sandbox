@@ -18,7 +18,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.ari.risinggraves.perks.PerkCosts;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 import net.ari.risinggraves.perks.PerkHandler;
-
+import net.minecraft.world.level.block.RenderShape;
 
 
 
@@ -31,6 +31,11 @@ public class PerkMachineBlock extends Block implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PerkMachineBlockEntity(pos, state);
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override

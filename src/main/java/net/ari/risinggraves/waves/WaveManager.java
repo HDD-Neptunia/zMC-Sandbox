@@ -46,6 +46,8 @@ public class WaveManager {
     private static int zombiesLeftToSpawn = 0;
     private static int zombiesAlive = 0;
     private static int maxActiveZombies = 8;
+    public static int bossCountThisWave = 0;
+
     private static int roundSoundDelay = -1;
 
 	public static boolean wavesActive = false;
@@ -149,16 +151,13 @@ public class WaveManager {
     private static void startWave() {
         waveInProgress = true;
 
-        if (shouldSpawnBoss(currentWave)) {
-            playBossWarningSound();
+        bossCountThisWave = getBossCountForRound(currentWave);
+
+        if (bossCountThisWave > 0) {
+            playBossWarningSound(bossCountThisWave);
         }
-        // COD-style total zombies scaling
+
         int totalZombies = (int)(Math.pow(currentWave, 2) * 0.5 + 5);
-
-
-        // Use your existing maxActiveZombies increment system
-        // (you increase it in startNextWave)
-        // So we DO NOT override it here.
 
         zombiesLeftToSpawn = totalZombies;
         zombiesAlive = 0;
@@ -166,9 +165,11 @@ public class WaveManager {
         System.out.println(
             "Starting wave " + currentWave +
             " with " + zombiesLeftToSpawn +
-            " zombies (max active " + maxActiveZombies + ")"
+            " zombies (max active " + maxActiveZombies + ")" +
+            " and " + bossCountThisWave + " boss zombies."
         );
     }
+
 
 
     public static boolean isWaveInProgress() {
@@ -198,6 +199,10 @@ public class WaveManager {
         return spawnTankThisWave;
     }
 
+    public static int getBossCountForRound(int round) {
+        return round / 6;
+    }
+
 	@SubscribeEvent
 	public static void onCZombieDeath(CZombieDeathEvent.Event event) {
 		if (!wavesActive) return;
@@ -225,20 +230,26 @@ public class WaveManager {
         }
     }
 
-    private static void playBossWarningSound() {
-        for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
-            currentLevel.playSound(
-                        null, // null = send to all players
-                        player.getX(),
-                        player.getY(),
-                        player.getZ(),
-                        net.minecraft.sounds.SoundEvents.WITHER_AMBIENT,
-                        net.minecraft.sounds.SoundSource.HOSTILE,
-                        1.0F,
-                        0.85F
-                    );
+    private static void playBossWarningSound(int count) {
+        for (int i = 0; i < count; i++) {
+            for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
+                currentLevel.playSound(
+                    null,
+                    player.getX(),
+                    player.getY(),
+                    player.getZ(),
+                    net.minecraft.sounds.SoundEvents.WITHER_AMBIENT,
+                    net.minecraft.sounds.SoundSource.HOSTILE,
+                    1.0F,
+                    0.85F
+                );
+            }
+
+            // small delay between each warning noise
+            try { Thread.sleep(300); } catch (InterruptedException ignored) {}
         }
     }
+
 
 
     private static void startNextWave() {

@@ -14,10 +14,12 @@ import net.minecraft.core.BlockPos;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+// ADD THESE
+import java.util.List;
+import java.util.ArrayList;
+
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.barrier.BlockadeCluster;
-
-
 
 @Mod.EventBusSubscriber(modid = "risinggraves", value = Dist.CLIENT)
 public class HologramRenderer {
@@ -35,14 +37,19 @@ public class HologramRenderer {
 
         BlockadeData data = BlockadeData.CLIENT;
 
+        // FIX: copy list to avoid mutation during render
+        List<BlockadeCluster> safeClusters = new ArrayList<>(data.getClusters());
 
-        for (BlockadeCluster cluster : data.getClusters()) {
+        for (BlockadeCluster cluster : safeClusters) {
 
-            // Pick the FIRST block in the cluster as the hologram anchor
+            // FIX: avoid crash when deselecting
+            if (cluster.blocks.isEmpty())
+                continue;
+
             BlockPos pos = cluster.blocks.get(0);
 
             double dist = player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5);
-            if (dist > 16) continue; // too far away
+            if (dist > 16) continue;
 
             String text = "§ePress §lCrouch§r§e & §lPlace§r§e to open (§a" + cluster.cost + "§e)";
 
@@ -78,7 +85,6 @@ public class HologramRenderer {
             0,
             15728880
         );
-
 
         poseStack.popPose();
     }

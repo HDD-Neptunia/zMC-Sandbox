@@ -15,10 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-
-
-
-
+import com.mojang.math.Axis;
 
 
 public class WallbuyRenderer implements BlockEntityRenderer<WallbuyBlockEntity> {
@@ -29,77 +26,87 @@ public class WallbuyRenderer implements BlockEntityRenderer<WallbuyBlockEntity> 
         public void render(WallbuyBlockEntity wallbuy, float partialTicks,
                         PoseStack poseStack, MultiBufferSource buffer,
                         int light, int overlay) {
-                
-                float x = 0;
-                float y = 0;
-                int color = 0xFFFFFF;
-                MultiBufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-                
-                Player player = Minecraft.getInstance().player;
-                if (player == null) return;
 
-                Vec3 cam = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-                double dist = cam.distanceTo(Vec3.atCenterOf(wallbuy.getBlockPos()));
-                if (dist > 8) return;
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
 
-                // -----------------------------
-                // HOLOGRAM TEXT (name + cost)
-                // -----------------------------
-                poseStack.pushPose();
+        Vec3 cam = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        double dist = cam.distanceTo(Vec3.atCenterOf(wallbuy.getBlockPos()));
+        if (dist > 8) return;
 
-                poseStack.translate(0.5, 1.3, 0.5);
-                poseStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
-                poseStack.scale(0.02f, -0.02f, 0.02f);
-
-                Item item = wallbuy.getItem();
-                int cost = wallbuy.getCost();
-
-                String text = item.getDescription().getString() + " (" + cost + ")";
-
-                var font = Minecraft.getInstance().font;
-                float width = font.width(text) / 2f;
-
-                font.drawInBatch(
-                        Component.literal(text),
-                        -width, y,
-                        color,
-                        false,
-                        poseStack.last().pose(),
-                        buffer,
-                        false,
-                        0,
-                        15728880
-                );
+        // ⭐ Declare facing ONCE
+        Direction facing = wallbuy.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 
 
-                poseStack.popPose();
+        // -----------------------------
+        // HOLOGRAM TEXT (name + cost)
+        // -----------------------------
+        poseStack.pushPose();
 
-                // -----------------------------
-                // ITEM RENDERED ON THE WALL
-                // -----------------------------
-                poseStack.pushPose();
+        // 1. Move to block center
+        poseStack.translate(0.5, 0.5, 1);
 
-                // Move item slightly forward from the wall
-                poseStack.translate(0.5, 0.5, 0.5);
-
-                // Rotate based on block facing
-                Direction facing = wallbuy.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-                poseStack.mulPose(facing.getRotation());
-
-                // Scale item
-                poseStack.scale(0.5f, 0.5f, 0.5f);
-
-                ItemStack stack = new ItemStack(wallbuy.getItem());
-                Minecraft.getInstance().getItemRenderer().renderStatic(
-                        stack,
-                        ItemTransforms.TransformType.GUI,
-                        light,
-                        overlay,
-                        poseStack,
-                        buffer,
-                        0
-                );
-
-                poseStack.popPose();
+        switch (facing) {
+        case NORTH -> poseStack.translate(0, 0.35, -0.501);
+        case SOUTH -> poseStack.translate(0, 0.35, 0.501);
+        case WEST  -> poseStack.translate(-0.501, 0.35, 0);
+        case EAST  -> poseStack.translate(0.501, 0.35, 0);
         }
+
+        // 3. Billboard to face the player
+        poseStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
+
+        // 4. Keep text upright (fix vertical tilt)
+        poseStack.mulPose(Axis.YP.rotationDegrees(180)); // optional if mirrored
+        poseStack.mulPose(Axis.ZP.rotationDegrees(0));   // ensures no sideways tilt
+
+        // 5. Scale text
+        poseStack.scale(0.02f, -0.02f, 0.02f);
+
+        String text = wallbuy.getItem().getDescription().getString() + " (" + wallbuy.getCost() + ")";
+        Font font = Minecraft.getInstance().font;
+        float width = font.width(text) / 2f;
+
+        font.drawInBatch(
+                Component.literal(text),
+                -width, 0,
+                0xFFFFFF,
+                false,
+                poseStack.last().pose(),
+                buffer,
+                false,
+                0,
+                15728880
+        );
+
+        poseStack.popPose();
+
+
+
+        // -----------------------------
+        // ITEM RENDER (3D)
+        // -----------------------------
+        // ⭐ YOUR ITEM BLOCK — UNCHANGED
+        poseStack.pushPose();
+
+        poseStack.translate(0.5, 0.5, 0.5);
+        poseStack.mulPose(facing.getRotation());
+        poseStack.translate(0, -0.48, 0);
+        poseStack.mulPose(Axis.XP.rotationDegrees(90));
+        poseStack.scale(0.5f, 0.5f, 0.5f);
+
+        ItemStack stack = new ItemStack(wallbuy.getItem());
+        Minecraft.getInstance().getItemRenderer().renderStatic(
+                stack,
+                ItemTransforms.TransformType.FIXED,
+                light,
+                overlay,
+                poseStack,
+                buffer,
+                0
+        );
+
+        poseStack.popPose();
+        }
+
 }

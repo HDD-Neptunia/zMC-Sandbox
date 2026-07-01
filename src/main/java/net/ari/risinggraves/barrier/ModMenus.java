@@ -12,6 +12,8 @@ import net.ari.risinggraves.block.wallbuy.WallbuyCostMenu;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.ari.risinggraves.block.WallbuyBlockEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -41,7 +43,15 @@ public class ModMenus {
                 ));
 
         public static final RegistryObject<MenuType<WallbuyCostMenu>> WALLBUY_MENU =
-                MENUS.register("wallbuy_menu", () -> new MenuType<>(WallbuyCostMenu::new));
+                MENUS.register("wallbuy_menu", () ->
+                        IForgeMenuType.create((id, inv, buf) -> {
+                        BlockPos pos = buf.readBlockPos();
+                        Item item = buf.readItem().getItem();
 
+                        BlockEntity be = inv.player.level.getBlockEntity(pos);
+                        WallbuyBlockEntity wallbuy = be instanceof WallbuyBlockEntity w ? w : null;
 
+                        return new WallbuyCostMenu(id, inv, wallbuy, item);
+                        })
+                );
 }

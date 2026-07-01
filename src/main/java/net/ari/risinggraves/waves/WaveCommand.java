@@ -47,11 +47,13 @@ public class WaveCommand {
 
 				for (ServerPlayer p : level.players()) {
 					p.getInventory().add(starter.copy());
+
+					int points = ScoreboardHandler.INSTANCE.getPoints(p.getName().getString());
+					SidebarScoreboard.show(p);
+					SidebarScoreboard.update(p, points);
 				}
 
-				// Show scoreboard
-				int points = ScoreboardHandler.INSTANCE.getPoints(player.getName().getString());
-				SidebarScoreboard.update(player, points);
+				
 
 				// Delay before first wave starts
 				Executors.newSingleThreadScheduledExecutor().schedule(() -> {

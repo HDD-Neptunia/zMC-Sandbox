@@ -21,6 +21,17 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.shapes.CollisionContext;
+
+import net.ari.risinggraves.block.wallbuy.WallbuyCostMenu;
 
 
 import net.minecraft.network.chat.Component;
@@ -56,6 +67,28 @@ public class WallbuyBlock extends Block implements EntityBlock {
         return new WallbuyBlockEntity(pos, state);
     }
 
+    private static final VoxelShape NORTH = Block.box(0, 0, 14, 16, 16, 16);
+    private static final VoxelShape SOUTH = Block.box(0, 0, 0, 16, 16, 2);
+    private static final VoxelShape EAST  = Block.box(0, 0, 0, 2, 16, 16);
+    private static final VoxelShape WEST  = Block.box(14, 0, 0, 16, 16, 16);
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
+            case NORTH -> NORTH;
+            case SOUTH -> SOUTH;
+            case EAST  -> EAST;
+            case WEST  -> WEST;
+            default -> NORTH;
+        };
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
+
+
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos,
                                 Player player, InteractionHand hand, BlockHitResult hit) {
@@ -70,13 +103,29 @@ public class WallbuyBlock extends Block implements EntityBlock {
         // CREATIVE SETUP MODE
         if (player.isCreative()) {
             if (!held.isEmpty()) {
-                // Open cost menu, passing the item
-                player.openMenu(new WallbuyCostMenuProvider(wallbuy, held.getItem()));
+                NetworkHooks.openScreen(
+                        (ServerPlayer) player,
+                        new MenuProvider() {
+                            @Override
+                            public Component getDisplayName() {
+                                return Component.literal("Wallbuy Cost");
+                            }
+
+                            @Override
+                            public AbstractContainerMenu createMenu(int id, Inventory inv, Player p) {
+                                return new WallbuyCostMenu(id, inv, wallbuy, held.getItem());
+                            }
+                        },
+                        buf -> {
+                            buf.writeBlockPos(pos);
+                            buf.writeItem(held);
+                        }
+                );
                 return InteractionResult.SUCCESS;
             }
         }
 
-        // SURVIVAL PURCHASE MODE
+        // SURVIVAL PURCHASE MODE (unchanged)
         int cost = wallbuy.getCost();
         Item item = wallbuy.getItem();
 
@@ -100,4 +149,5 @@ public class WallbuyBlock extends Block implements EntityBlock {
 
         return InteractionResult.SUCCESS;
     }
+
 }

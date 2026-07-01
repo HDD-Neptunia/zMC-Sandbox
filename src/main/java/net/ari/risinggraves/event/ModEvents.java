@@ -53,6 +53,7 @@ public class ModEvents {
             }
         }
     }
+    
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {

@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/block",
   "ambientocclusion": true,
   "textures": {
     "north": "risinggraves:block/perk_machine_front",
@@ -7,19 +7,20 @@
     "east":  "risinggraves:block/perk_machine_right",
     "west":  "risinggraves:block/perk_machine_left",
     "up":    "risinggraves:block/perk_machine_topface",
-    "down":  "risinggraves:block/perk_machine_back"
+    "down":  "risinggraves:block/perk_machine_back",
+    "particle": "risinggraves:block/perk_machine_front"
   },
   "elements": [
     {
       "from": [0, 0, 0],
-      "to": [16, 15.999, 16],
+      "to":   [16, 16, 16],
       "faces": {
-        "north": { "texture": "#north", "tintindex": 0 },
-        "south": { "texture": "#south", "tintindex": 0 },
-        "east":  { "texture": "#east",  "tintindex": 0 },
-        "west":  { "texture": "#west",  "tintindex": 0 },
-        "up":    { "texture": "#up",    "tintindex": 0 },
-        "down":  { "texture": "#down",  "tintindex": 0 }
+        "north": { "texture": "#north" },
+        "south": { "texture": "#south" },
+        "east":  { "texture": "#east" },
+        "west":  { "texture": "#west" },
+        "up":    { "texture": "#up" },
+        "down":  { "texture": "#down" }
       }
     }
   ]

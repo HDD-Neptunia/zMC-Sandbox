@@ -1,26 +1,25 @@
 package net.ari.risinggraves.barrier;
 
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraft.server.level.ServerPlayer;
 
-
+import java.util.List;
 
 public class WandFunction extends Item {
 
@@ -28,54 +27,54 @@ public class WandFunction extends Item {
         super(props);
     }
 
-
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
-
         Player player = ctx.getPlayer();
         Level level = ctx.getLevel();
 
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (player == null || level.isClientSide) return InteractionResult.SUCCESS;
 
-        // ⭐ Correct block targeting using raycast
+        // raycast
         HitResult hit = player.pick(5.0D, 0.0F, false);
-
         if (hit.getType() != HitResult.Type.BLOCK) {
             return InteractionResult.SUCCESS;
         }
 
-        int active = tag.getInt("activeCluster");
-        int clusterId = findClusterAtPos(pos);
+        BlockPos pos = ((BlockHitResult) hit).getBlockPos();
 
-        if (clusterId != active) {
-            // Not the active cluster → ignore selection
+        ItemStack stack = ctx.getItemInHand();
+        CompoundTag tag = stack.getOrCreateTag();
+
+        // get active cluster
+        int active = tag.getInt("activeCluster");
+        int clusterId = findClusterAtPos(level, pos);
+
+        // only interact with active cluster if one is set
+        if (active >= 0 && clusterId != active) {
             return InteractionResult.SUCCESS;
         }
 
-        BlockPos pos = ((BlockHitResult) hit).getBlockPos();
-        // ⭐ DO NOT SELECT AIR (purchased barrier)
+        // block selecting AIR (purchased barrier)
         BlockState clickedState = level.getBlockState(pos);
         if (clickedState.isAir()) {
             player.displayClientMessage(Component.literal("§cCannot select purchased barrier"), true);
             return InteractionResult.SUCCESS;
         }
 
-        // ⭐ Sprint = switch active cluster instead of selecting blocks
+        // sprint = switch active cluster
         if (player.isSprinting()) {
-            int newCluster = findClusterAtPos(pos); // you already have this logic somewhere
-            tag.putInt("activeCluster", newCluster);
-            player.displayClientMessage(Component.literal("§eSwitched active barrier"), true);
+            int newCluster = findClusterAtPos(level, pos);
+            if (newCluster >= 0) {
+                tag.putInt("activeCluster", newCluster);
+                player.displayClientMessage(Component.literal("§eSwitched active barrier"), true);
+            }
             return InteractionResult.SUCCESS;
         }
 
+        // selection list
+        ListTag list = tag.getList("selected", ListTag.TAG_COMPOUND);
 
-        System.out.println("WAND SELECTED POS = " + pos + " | BLOCK = " + level.getBlockState(pos));
-
-        ItemStack stack = ctx.getItemInHand();
-        CompoundTag tag = stack.getOrCreateTag();
-        ListTag list = tag.getList("selected", Tag.TAG_COMPOUND);
-
-        // Check if block is already selected
+        // toggle selection
         boolean alreadySelected = false;
         int indexToRemove = -1;
 
@@ -98,7 +97,7 @@ public class WandFunction extends Item {
             return InteractionResult.SUCCESS;
         }
 
-        // ⭐ Correct blockstate capture
+        // save block + state
         BlockState state = level.getBlockState(pos);
         CompoundTag stateTag = NbtUtils.writeBlockState(state);
 
@@ -117,32 +116,89 @@ public class WandFunction extends Item {
     }
 
 
+    private int findClusterAtPos(Level level, BlockPos pos) {
+        BlockadeData data = BlockadeData.get(level);
+        List<BlockadeCluster> clusters = data.getClusters();
+
+        for (int i = 0; i < clusters.size(); i++) {
+            if (clusters.get(i).blocks.contains(pos)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private CompoundTag getClusterTag(Level level, int clusterId) {
+        BlockadeData data = BlockadeData.get(level);
+        List<BlockadeCluster> clusters = data.getClusters();
+
+        BlockadeCluster cluster = clusters.get(clusterId);
+
+        CompoundTag tag = new CompoundTag();
+        ListTag list = new ListTag();
+
+        for (int i = 0; i < cluster.blocks.size(); i++) {
+            BlockPos pos = cluster.blocks.get(i);
+            BlockState state = cluster.states.get(i);
+
+            CompoundTag entry = new CompoundTag();
+            entry.putInt("x", pos.getX());
+            entry.putInt("y", pos.getY());
+            entry.putInt("z", pos.getZ());
+            entry.put("state", NbtUtils.writeBlockState(state));
+
+            list.add(entry);
+        }
+
+        tag.put("selected", list);
+        tag.putInt("cost", cluster.cost);
+
+        return tag;
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        CompoundTag tag = stack.getOrCreateTag();
 
+        // only crouch opens menu
         if (!player.isShiftKeyDown())
             return InteractionResultHolder.pass(stack);
 
-        // ⭐ Only open menu for active cluster
-        int active = tag.getInt("activeCluster");
-        CompoundTag clusterTag = getClusterTag(active); // you already have cluster storage
-
-        NetworkHooks.openScreen((ServerPlayer) player, new CostMenuProvider(clusterTag), buf -> {
-            buf.writeNbt(clusterTag);
-        });
-
-
-        CompoundTag tag = stack.getOrCreateTag();
         if (!level.isClientSide) {
             NetworkHooks.openScreen((ServerPlayer) player, new CostMenuProvider(tag), buf -> {
                 buf.writeNbt(tag);
             });
         }
 
-
-
         return InteractionResultHolder.success(stack);
     }
+
+
+
+    /*@Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        CompoundTag tag = stack.getOrCreateTag();
+
+        if (!player.isShiftKeyDown())
+            return InteractionResultHolder.pass(stack);
+
+        int active = tag.getInt("activeCluster");
+        if (active < 0) {
+            player.displayClientMessage(Component.literal("§cNo active barrier selected"), true);
+            return InteractionResultHolder.pass(stack);
+        }
+
+        CompoundTag clusterTag = getClusterTag(level, active);
+
+        if (!level.isClientSide) {
+            NetworkHooks.openScreen((ServerPlayer) player, new CostMenuProvider(clusterTag), buf -> {
+                buf.writeNbt(clusterTag);
+            });
+        }
+
+        return InteractionResultHolder.success(stack);
+    } */
 }
+

@@ -8,8 +8,14 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockEntities {
 
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, RisingGraves.MOD_ID);
+        static {
+                System.out.println("[BLOCKENTITIES] Class loaded");
+        }
+
+        public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+                DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, RisingGraves.MOD_ID);
+
+                
 
         public static final RegistryObject<BlockEntityType<CustomSpawnerBlockEntity>> CUSTOM_SPAWNER =
                 BLOCK_ENTITIES.register("custom_spawner",
@@ -19,11 +25,13 @@ public class ModBlockEntities {
                         ).build(null));
 
         public static final RegistryObject<BlockEntityType<PerkMachineBlockEntity>> PERK_MACHINE =
-                BLOCK_ENTITIES.register("perk_machine",
-                        () -> BlockEntityType.Builder.of(
+                BLOCK_ENTITIES.register("perk_machine", () -> {
+                        System.out.println("[BLOCKENTITIES] Registering PERK_MACHINE type");
+                        return BlockEntityType.Builder.of(
                                 PerkMachineBlockEntity::new,
                                 ModBlocks.PERK_MACHINE.get()
-                        ).build(null));
+                        ).build(null);
+                });
 
         public static final RegistryObject<BlockEntityType<WallbuyBlockEntity>> WALLBUY =
                 BLOCK_ENTITIES.register("wallbuy",

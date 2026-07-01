@@ -20,19 +20,11 @@ public class WallbuyCostMenu extends AbstractContainerMenu {
     private final WallbuyBlockEntity wallbuy;
     private final Item item;
 
-    
-    public WallbuyCostMenu(int id, Inventory inv) {
-        super(ModMenus.WALLBUY_MENU.get(), id);
-        this.wallbuy = null;
-        this.item = Items.AIR;
-    }
-
-
-    // REAL constructor (your provider uses this)
     public WallbuyCostMenu(int id, Inventory inv, WallbuyBlockEntity wallbuy, Item item) {
         super(ModMenus.WALLBUY_MENU.get(), id);
         this.wallbuy = wallbuy;
         this.item = item;
+        System.out.println("[WALLBUY MENU] Constructed with item: " + item);
     }
 
     @Override

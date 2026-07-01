@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ItemStack;
+import net.ari.risinggraves.barrier.WandFunction;
 
 import net.minecraft.core.BlockPos;
 import java.util.ArrayList;
@@ -81,13 +83,18 @@ public class ConfirmCostPacket {
             // ⭐ Create cluster
             BlockadeCluster cluster = new BlockadeCluster(msg.blocks, msg.states, msg.cost);
 
-            // ⭐ Mark purchased
-            cluster.purchased = true;
-
-            // ⭐ Add to SavedData
+            // ⭐ Add to SavedData FIRST
             data.addCluster(cluster);
 
-            // Sync back to client
+            // ⭐ Clear wand selection + set active cluster
+            ItemStack stack = player.getMainHandItem();
+            if (stack.getItem() instanceof WandFunction) {
+                CompoundTag tag = stack.getOrCreateTag();
+                tag.remove("selected");
+                tag.putInt("activeCluster", data.getClusters().size() - 1);
+            }
+
+            // ⭐ Sync back to client
             Networking.CHANNEL.send(
                 PacketDistributor.PLAYER.with(() -> player),
                 new SyncBlockadesPacket(data.getClusters())
@@ -95,5 +102,6 @@ public class ConfirmCostPacket {
         });
         ctx.get().setPacketHandled(true);
     }
+
 
 }

@@ -8,6 +8,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+
 
 
 public class WallbuyBlockEntity extends BlockEntity {
@@ -19,10 +23,31 @@ public class WallbuyBlockEntity extends BlockEntity {
         super(ModBlockEntities.WALLBUY.get(), pos, state);
     }
 
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag);
+        return tag;
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     public Item getItem() { return item; }
     public int getCost() { return cost; }
 
-    public void setItem(Item item) { this.item = item; setChanged(); }
+    public void setItem(Item item) {
+        this.item = item;
+        setChanged();
+
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    
     public void setCost(int cost) { this.cost = cost; setChanged(); }
 
     @Override

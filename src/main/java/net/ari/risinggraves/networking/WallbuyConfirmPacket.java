@@ -21,6 +21,7 @@ public class WallbuyConfirmPacket {
     }
 
     public static void send(ItemStack stack, int cost) {
+        System.out.println("[WALLBUY PACKET SEND] Sending item: " + stack.getItem() + " cost: " + cost);
         Networking.CHANNEL.sendToServer(new WallbuyConfirmPacket(stack, cost));
     }
 
@@ -35,11 +36,17 @@ public class WallbuyConfirmPacket {
 
     public static void handle(WallbuyConfirmPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
+            System.out.println("[WALLBUY PACKET HANDLE] Received item: " + msg.stack.getItem() + " cost: " + msg.cost);
+            
             ServerPlayer player = ctx.get().getSender();
             if (player != null && player.containerMenu instanceof WallbuyCostMenu menu) {
                 WallbuyBlockEntity wallbuy = menu.getWallbuy();
+                System.out.println("[WALLBUY PACKET HANDLE] BlockEntity before set: " + wallbuy.getItem());
+
                 wallbuy.setItem(msg.stack.getItem());
                 wallbuy.setCost(msg.cost);
+
+                System.out.println("[WALLBUY PACKET HANDLE] BE after set: " + wallbuy.getItem());
             }
         });
         ctx.get().setPacketHandled(true);

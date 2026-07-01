@@ -7,9 +7,14 @@ import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.Mod;
 
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SidebarScoreboard {
+
 
     private static Objective objective;
 
@@ -26,10 +31,15 @@ public class SidebarScoreboard {
                 ObjectiveCriteria.RenderType.INTEGER
             );
         }
-
-        // ❌ REMOVE THIS:
-        // board.setDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR, objective);
     }
+
+    @SubscribeEvent
+    public static void onPlayerJoinHide(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            SidebarScoreboard.hide(player);
+        }
+    }
+
 
     public static void update(ServerPlayer player, int points) {
         Scoreboard board = player.getScoreboard();

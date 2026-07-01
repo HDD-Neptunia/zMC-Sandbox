@@ -33,6 +33,8 @@ public class ModItems {
         public static final RegistryObject<Item> BLOCKADE_WAND =
                 ITEMS.register("blockade_wand", () -> new WandFunction(new Item.Properties()));
 
+        public static final RegistryObject<SwordItem> DEBUG_WEAPON = ITEMS.register ("debug_weapon",
+                () -> new SwordItem(Tiers.SAPPHIRE, 200, 2.0f, new Item.Properties()));
 
         public static final RegistryObject<Item> SAPPHIRE = ITEMS.register ("sapphire",
                 () -> new Item(new Item.Properties()));

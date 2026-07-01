@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import net.ari.risinggraves.barrier.CostScreen;
 import net.ari.risinggraves.block.ModBlockEntities;
 import net.ari.risinggraves.waves.WaveManager;
+import net.ari.risinggraves.zombies.TankZombieRenderer;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(RisingGraves.MOD_ID)
@@ -111,6 +112,7 @@ public class RisingGraves
             event.accept(ModBlocks.MYSTERY_CRATE);
             event.accept(ModBlocks.PERK_MACHINE);
             event.accept(ModBlocks.WALLBUY);
+            event.accept(ModBlocks.CUSTOM_SPAWNER);
         }
 
 
@@ -171,6 +173,7 @@ public class RisingGraves
     @SubscribeEvent
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.CZOMBIE.get(), CZombieRenderer::new);
+            event.registerEntityRenderer(ModEntities.TANK_ZOMBIE.get(), TankZombieRenderer::new);
         }
     }
 }

@@ -9,6 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.barrier.BlockadeCluster;
@@ -29,6 +31,14 @@ public class ResetBlockadesCommand {
         BlockadeData data = BlockadeData.get(level);
 
         int restored = 0;
+
+        for (ServerPlayer p : level.getServer().getPlayerList().getPlayers()) {
+            ItemStack wand = p.getMainHandItem();
+            if (wand.getItem() instanceof WandFunction) {
+                wand.getOrCreateTag().remove("selected");
+                wand.getOrCreateTag().putInt("activeCluster", -1);
+            }
+        }
 
         for (BlockadeCluster cluster : data.getClusters()) {
             System.out.println("Cluster states size = " + cluster.states.size());

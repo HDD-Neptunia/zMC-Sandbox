@@ -7,7 +7,7 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.scores.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
-
+import net.ari.risinggraves.waves.WaveManager;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,21 +31,20 @@ public class ScoreboardHandler {
         playerScores.put(playerName, updated);
 
         // Only update scoreboard if waves are active
-        if (server != null) {
+        // Only update scoreboard if waves are active
+        if (server != null && WaveManager.wavesActive) {
             ServerPlayer player = server.getPlayerList().getPlayerByName(playerName);
             if (player != null) {
                 SidebarScoreboard.update(player, updated);
             }
         }
-    }
 
+    }
 
     public int getPoints(String playerName) {
         return playerScores.getOrDefault(playerName, 0);
     }
 }
-
-
 
     /*    @SubscribeEvent
     public void onRenderGameOverlay(RenderGameOverlayEvent.Text event) {

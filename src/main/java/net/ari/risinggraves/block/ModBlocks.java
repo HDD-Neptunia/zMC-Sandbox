@@ -75,6 +75,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> PERK_MACHINE = registerBlock("perk_machine",
             () -> new PerkMachineBlock(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(6.0f)
+                    .noOcclusion()
         ));
 
     public static final RegistryObject<Block> WALLBUY = registerBlock("wallbuy",

@@ -13,6 +13,11 @@ import net.ari.risinggraves.perks.PerkType;
 import net.minecraft.world.MenuProvider;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+
 
 
 public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider {
@@ -24,7 +29,9 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
 
     public PerkMachineBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PERK_MACHINE.get(), pos, state);
+        System.out.println("[BE] Constructed");
     }
+
 
     @Override
     public ModelData getModelData() {
@@ -51,6 +58,9 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
+        System.out.println("[BE] handleUpdateTag CLIENT=" + level.isClientSide + " pos=" + worldPosition);
+        System.out.println("[BE] handleUpdateTag TAG=" + tag);
+
         load(tag);
     }
 
@@ -61,6 +71,8 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        System.out.println("[BE] load CLIENT=" + level.isClientSide + " pos=" + worldPosition + " TAG=" + tag);
+
         if (tag.contains("perk")) {
             this.perk = PerkType.valueOf(tag.getString("perk"));
             System.out.println("[BE] load: perk=" + this.perk + " at " + worldPosition + " (client=" + level.isClientSide + ")");
@@ -71,7 +83,10 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
 
     @Override
     public void onLoad() {
-        System.out.println("[BE] onLoad client=" + level.isClientSide + " pos=" + worldPosition);
+        System.out.println("[BE] onLoad CLIENT=" + level.isClientSide +
+                       " pos=" + worldPosition +
+                       " perk=" + perk);
+
         if (level != null && level.isClientSide) {
             requestModelDataUpdate();
         }
@@ -91,16 +106,31 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
     public void setPerk(PerkType perk) {
         this.perk = perk;
         this.getColor(); // refresh cache
+
         System.out.println("[BE] setPerk=" + perk + " client=" + level.isClientSide);
 
         setChanged();
 
         if (level != null) {
-            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(worldPosition, state, state, 3);
             requestModelDataUpdate();
         }
     }
 
+
+
+
+    @Override
+    public net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ClientGamePacketListener> getUpdatePacket() {
+        return net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.Connection net,
+                            net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket pkt) {
+        handleUpdateTag(pkt.getTag());
+    }
 
 
 

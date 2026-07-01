@@ -1,29 +1,26 @@
 package net.ari.risinggraves.barrier;
 
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.Tag;
 import net.ari.risinggraves.barrier.WandFunction;
-
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = "risinggraves", value = Dist.CLIENT)
 public class SelectionRenderer {
@@ -44,39 +41,23 @@ public class SelectionRenderer {
         if (!(held.getItem() instanceof WandFunction)) return;
 
         CompoundTag tag = held.getOrCreateTag();
-        int activeCluster = tag.getInt("activeCluster");
-        BlockadeData data = BlockadeData.get(level);
-
-        ListTag list = tag.getList("selected", Tag.TAG_COMPOUND);
+        ListTag list = tag.getList("selected", ListTag.TAG_COMPOUND);
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource buffer = mc.renderBuffers().bufferSource();
 
-        for (int clusterId = 0; clusterId < data.clusters.size(); clusterId++) {
-            BlockadeCluster cluster = data.clusters.get(clusterId);
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag b = list.getCompound(i);
+            BlockPos pos = new BlockPos(b.getInt("x"), b.getInt("y"), b.getInt("z"));
 
-            for (BlockPos pos : cluster.blocks) {
-
-                float r, g, b;
-
-                if (clusterId == activeCluster) {
-                    // ⭐ Active cluster → GREEN
-                    r = 0f; g = 1f; b = 0f;
-                } else if (cluster.purchased) {
-                    // ⭐ Purchased cluster → RED
-                    r = 1f; g = 0f; b = 0f;
-                } else {
-                    // ⭐ Other clusters → YELLOW
-                    r = 1f; g = 1f; b = 0f;
-                }
-
-                renderOutline(poseStack, buffer, pos, r, g, b);
-            }
+            // plain yellow for now
+            renderOutline(poseStack, buffer, pos, 1f, 1f, 0f);
         }
-
     }
 
-    private static void renderOutline(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos, float r, float g, float b) {
+
+    private static void renderOutline(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos,
+                                      float r, float g, float b) {
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
 
@@ -95,7 +76,7 @@ public class SelectionRenderer {
             r, g, b, 1f
         );
 
-
         poseStack.popPose();
     }
 }
+

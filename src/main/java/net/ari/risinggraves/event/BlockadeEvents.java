@@ -51,7 +51,7 @@ public class BlockadeEvents {
                 player.displayClientMessage(Component.literal("§aBlockade opened!"), true);
 
                 // Remove the cluster from the list
-                data.getClusters().remove(cluster);
+                cluster.purchased = true;
                 data.setDirty();
 
                 return;

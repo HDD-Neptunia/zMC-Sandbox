@@ -1,8 +1,11 @@
 package net.ari.risinggraves.waves;
 
+import java.util.HashMap;
+
 import net.minecraft.world.level.Level;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -10,6 +13,22 @@ import net.ari.risinggraves.zombies.CZombieDeathEvent;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.ari.risinggraves.scoreboard.SidebarScoreboard;
+import net.ari.risinggraves.zombies.TankZombie;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.network.chat.Component;
+import java.util.Map;
+import java.util.UUID;
+import java.util.HashMap;
+import net.minecraft.world.level.Level;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.GameType;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 
 
@@ -17,12 +36,21 @@ import net.ari.risinggraves.scoreboard.SidebarScoreboard;
 
 public class WaveManager {
 
+    private static final ScheduledExecutorService executor =
+        Executors.newSingleThreadScheduledExecutor();
+
     private static int currentWave = 1;
+
+    public static final Map<UUID, Boolean> isOutThisRound = new HashMap<>();
 
     private static int zombiesLeftToSpawn = 0;
     private static int zombiesAlive = 0;
     private static int maxActiveZombies = 8;
+    private static int roundSoundDelay = -1;
+
 	public static boolean wavesActive = false;
+    public static boolean spawnTankThisWave = false;
+
 
     private static boolean waveInProgress = false;
     private static Level currentLevel;
@@ -36,6 +64,14 @@ public class WaveManager {
         wavesActive = true;
         currentLevel = level;
         currentWave = 1;
+        
+        for (ServerPlayer p : level.getServer().getPlayerList().getPlayers()) {
+            p.connection.send(new ClientboundStopSoundPacket(null, SoundSource.MUSIC));
+            p.connection.send(new ClientboundStopSoundPacket(null, SoundSource.AMBIENT));
+            p.connection.send(new ClientboundStopSoundPacket(null, SoundSource.WEATHER));
+
+        }
+
 
         SidebarScoreboard.init(level.getServer());
         // Show scoreboard for all players
@@ -46,7 +82,55 @@ public class WaveManager {
         }
 
     startWave();
-}
+    }
+
+    public static boolean shouldSpawnBoss(int round) {
+        return round % 6 == 0; // every 6 rounds
+    }
+
+    @SubscribeEvent
+    public static void onPlayerDeath(LivingDeathEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (!WaveManager.wavesActive) return;
+
+        WaveManager.isOutThisRound.put(player.getUUID(), true);
+
+        // Prevent normal respawn
+        player.setRespawnPosition(player.level.dimension(), player.blockPosition(), 0, true, false);
+
+        // Put them in spectator mode
+        player.setGameMode(GameType.SPECTATOR);
+    }
+
+    public static void revivePlayers() {
+        for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
+            if (isOutThisRound.getOrDefault(player.getUUID(), false)) {
+
+                // Convert Level -> ServerLevel
+                ServerLevel serverLevel = (ServerLevel) currentLevel;
+
+                // Respawn them at spawn or a custom location
+                BlockPos spawn = serverLevel.getSharedSpawnPos();
+                player.teleportTo(serverLevel, spawn.getX(), spawn.getY(), spawn.getZ(), 0, 0);
+
+                // Put them back in survival
+                player.setGameMode(GameType.SURVIVAL);
+
+                // Clear the flag
+                isOutThisRound.put(player.getUUID(), false);
+            }
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (WaveManager.wavesActive) {
+            ServerPlayer sp = (ServerPlayer) event.getEntity();
+            sp.setGameMode(GameType.SPECTATOR);
+        }
+    }
+
 
 
 	public static void stopWaves() {
@@ -65,8 +149,12 @@ public class WaveManager {
     private static void startWave() {
         waveInProgress = true;
 
+        if (shouldSpawnBoss(currentWave)) {
+            playBossWarningSound();
+        }
         // COD-style total zombies scaling
-        int totalZombies = 6 + (int)Math.floor(Math.pow(1.35, currentWave));
+        int totalZombies = (int)(Math.pow(currentWave, 2) * 0.5 + 5);
+
 
         // Use your existing maxActiveZombies increment system
         // (you increase it in startNextWave)
@@ -101,8 +189,13 @@ public class WaveManager {
 
         if (zombiesAlive <= 0 && zombiesLeftToSpawn <= 0) {
 			if (!wavesActive) return;
+            revivePlayers();
             startNextWave();
         }
+    }
+
+    public static boolean shouldSpawnTank() {
+        return spawnTankThisWave;
     }
 
 	@SubscribeEvent
@@ -111,33 +204,69 @@ public class WaveManager {
 		onZombieDefeated();
 	}
 
+    @SubscribeEvent
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        if (roundSoundDelay > 0) {
+            roundSoundDelay--;
+
+            if (roundSoundDelay == 0) {
+                for (ServerPlayer p : currentLevel.getServer().getPlayerList().getPlayers()) {
+                    currentLevel.playSound(
+                        null, // null = send to all players
+                        p.blockPosition(),
+                        net.minecraft.sounds.SoundEvents.WITHER_SPAWN,
+                        net.minecraft.sounds.SoundSource.PLAYERS,
+                        1.0F,
+                        1.2F
+                    );
+
+                }
+            }
+        }
+    }
+
+    private static void playBossWarningSound() {
+        for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
+            currentLevel.playSound(
+                        null, // null = send to all players
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        net.minecraft.sounds.SoundEvents.WITHER_AMBIENT,
+                        net.minecraft.sounds.SoundSource.HOSTILE,
+                        1.0F,
+                        0.85F
+                    );
+        }
+    }
+
+
     private static void startNextWave() {
     waveInProgress = false;
 
     System.out.println("Wave " + currentWave + " complete! Next wave in 10 seconds.");
 
-    Executors.newSingleThreadScheduledExecutor()
-        .schedule(() -> {
-            if (!wavesActive) return;
 
-            currentWave++;          
-            maxActiveZombies = Math.min(24, 6 + currentWave);
+    roundSoundDelay = 200;
 
-            // 🔥 ROUND START INDICATOR 🔥
-            for (ServerPlayer p : currentLevel.getServer().getPlayerList().getPlayers()) {
-                // ominous round stinger
-                p.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 1.0F, 1.2F);
+    executor.schedule(() -> {
+        if (!wavesActive) return;
 
-                // subtle action bar message
-                p.displayClientMessage(
-                    net.minecraft.network.chat.Component.literal("§6Wave " + currentWave + " begins!"),
-                    true
-                );
-            }
+        currentWave++;
 
-            startWave();            
-        }, 10, TimeUnit.SECONDS);
+        spawnTankThisWave = shouldSpawnBoss(currentWave);
+        maxActiveZombies = Math.min(24, 6 + currentWave);
+
+        for (ServerPlayer p : currentLevel.getServer().getPlayerList().getPlayers()) {
+            p.displayClientMessage(
+                Component.literal("§6Wave " + currentWave + " begins!"),
+                true
+            );
+        }
+
+        startWave();
+    }, 10, TimeUnit.SECONDS);
+
     }
-
 
 }

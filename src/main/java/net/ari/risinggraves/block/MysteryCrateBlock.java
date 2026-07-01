@@ -12,7 +12,7 @@ import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 import net.minecraft.network.chat.Component;
 import net.ari.risinggraves.block.crate.ChestList;
 import net.minecraft.world.item.ItemStack;
-
+import net.ari.risinggraves.block.crate.CrateManager;
 
 
 
@@ -26,11 +26,24 @@ public class MysteryCrateBlock extends Block {
     }
 
     @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        if (!level.isClientSide) {
+            CrateManager.INSTANCE.registerCrate(pos);
+        }
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos,
                                 Player player, InteractionHand hand, BlockHitResult hit) {
 
         if (level.isClientSide) {
-            return InteractionResult.SUCCESS; // tell the client "we handled it"
+            return InteractionResult.SUCCESS;
+        }
+
+        // Check if this crate is the active one
+        if (!CrateManager.INSTANCE.isActive(pos)) {
+            player.displayClientMessage(Component.literal("§cThe Mystery Box is not here."), true);
+            return InteractionResult.SUCCESS;
         }
 
         String name = player.getName().getString();
@@ -38,7 +51,7 @@ public class MysteryCrateBlock extends Block {
 
         if (points < COST) {
             player.displayClientMessage(Component.literal("§cNot enough points! (" + points + "/" + COST + ")"), true);
-            return InteractionResult.SUCCESS; // STOP HERE
+            return InteractionResult.SUCCESS;
         }
 
         // Deduct points
@@ -51,7 +64,11 @@ public class MysteryCrateBlock extends Block {
 
         player.displayClientMessage(Component.literal("§aMystery Box Reward: " + reward.getHoverName().getString()), true);
 
-        return InteractionResult.SUCCESS; // IMPORTANT
+        // Chance to break and move
+        CrateManager.INSTANCE.trySwitch(level, player);
+
+        return InteractionResult.SUCCESS;
     }
+
 }
 

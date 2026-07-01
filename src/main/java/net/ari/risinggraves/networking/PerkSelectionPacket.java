@@ -40,7 +40,10 @@ public class PerkSelectionPacket {
             System.out.println("[PACKET] Received perk=" + msg.perk);
 
             if (player != null && player.containerMenu instanceof PerkSelectionMenu menu) {
-                System.out.println("[PACKET] Updating machine at " + menu.getMachine().getBlockPos());
+                System.out.println("[PACKET] menu.machine=" + menu.getMachine());
+                System.out.println("[PACKET] menu.machine.level=" + menu.getMachine().getLevel());
+                System.out.println("[PACKET] menu.machine.clientSide=" + menu.getMachine().getLevel().isClientSide);
+
                 menu.getMachine().setPerk(msg.perk);
 
                 player.closeContainer();

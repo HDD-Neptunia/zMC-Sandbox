@@ -1,15 +1,24 @@
 {
   "parent": "block/block",
   "textures": {
-    "texture": "risinggraves:block/wallbuy"
+    "front":  "risinggraves:block/wallbuy_front",
+    "back":   "risinggraves:block/wallbuy_front",
+    "left":   "risinggraves:block/wallbuy_left",
+    "right":  "risinggraves:block/wallbuy_right",
+    "top":    "risinggraves:block/wallbuy_top",
+    "bottom": "risinggraves:block/wallbuy_bottom"
   },
   "elements": [
     {
-      "from": [0, 0, 7],
-      "to": [16, 16, 9],
+      "from": [0, 0, 0],
+      "to":   [16, 16, 2],
       "faces": {
-        "north": { "texture": "#texture" },
-        "south": { "texture": "#texture" }
+        "north": { "texture": "#front" },
+        "south": { "texture": "#back" },
+        "east":  { "texture": "#right" },
+        "west":  { "texture": "#left" },
+        "up":    { "texture": "#top" },
+        "down":  { "texture": "#bottom" }
       }
     }
   ]

@@ -33,6 +33,14 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
 
         if (!WaveManager.isWaveInProgress()) return;
         if (!WaveManager.canSpawnMore()) return;
+        if (WaveManager.shouldSpawnTank() && WaveManager.getZombiesAlive() == 0) {
+            spawnTankZombie(level, worldPosition);
+            WaveManager.onZombieSpawned();
+            WaveManager.spawnTankThisWave = false;
+            cooldown = 40;
+            return;
+        }
+
 
         spawnCZombie(level, worldPosition);
         cooldown = 20; // 1 second
@@ -64,6 +72,19 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
         server.addFreshEntity(zombie);
 
         WaveManager.onZombieSpawned();
-}
+    }
+
+    private void spawnTankZombie(Level level, BlockPos pos) {
+        if (!(level instanceof ServerLevel server)) return;
+
+        var tank = ModEntities.TANK_ZOMBIE.get().create(server);
+        if (tank == null) return;
+
+        tank.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
+                    level.random.nextFloat() * 360F, 0);
+
+        server.addFreshEntity(tank);
+    }
+
 
 }

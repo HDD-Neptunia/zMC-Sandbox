@@ -51,9 +51,9 @@ public class WaveCommand {
 
 				MinecraftServer server = context.getSource().getServer();
 
-				for (ServerPlayer p: server.getPlayerList().getPlayers()) {
-					PerkHandler.resetPerks(player);
-					ScoreboardHandler.INSTANCE.resetPoints(player.getName().getString());
+				for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+					PerkHandler.resetPerks(p);
+					ScoreboardHandler.INSTANCE.resetPoints(p.getName().getString());
 				}
 
 				ItemStack drop;

@@ -28,7 +28,6 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
 
 
 
-    public static final List<BlockPos> ALL_SPAWNERS = new ArrayList<>();
 
     public CustomSpawnerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CUSTOM_SPAWNER.get(), pos, state);
@@ -83,18 +82,15 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onLoad() {
-        if (!level.isClientSide) {
-            ALL_SPAWNERS.add(worldPosition);
-        }
-    }
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
-    @Override
-    public void setRemoved() {
-        if (!level.isClientSide) {
-            ALL_SPAWNERS.remove(worldPosition);
+        if (tag.contains("doorX")) {
+            int x = tag.getInt("doorX");
+            int y = tag.getInt("doorY");
+            int z = tag.getInt("doorZ");
+            this.linkedDoor = new BlockPos(x, y, z);
         }
-        super.setRemoved();
     }
 
     private void spawnCZombie(Level level, BlockPos pos) {

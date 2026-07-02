@@ -51,15 +51,16 @@ public class LWandFunction extends Item {
 
                 BlockadeData data = BlockadeData.get(level);
 
-                boolean isDoor = false;
+                // Find which cluster this block belongs to
+                BlockadeCluster targetCluster = null;
                 for (BlockadeCluster cluster : data.getClusters()) {
                     if (cluster.blocks.contains(pos)) {
-                        isDoor = true;
+                        targetCluster = cluster;
                         break;
                     }
                 }
 
-                if (!isDoor) {
+                if (targetCluster == null) {
                     player.displayClientMessage(Component.literal("§cThis block is not part of a blockade."), true);
                     return InteractionResult.SUCCESS;
                 }
@@ -73,7 +74,11 @@ public class LWandFunction extends Item {
 
                 BlockEntity be2 = level.getBlockEntity(spawnerPos);
                 if (be2 instanceof CustomSpawnerBlockEntity spawner2) {
-                    spawner2.setLinkedDoor(pos);
+
+                    // ALWAYS link to the cluster root, not the clicked block
+                    BlockPos doorRoot = targetCluster.blocks.get(0);
+
+                    spawner2.setLinkedDoor(doorRoot);
                     spawner2.setChanged();
                     level.sendBlockUpdated(spawnerPos, level.getBlockState(spawnerPos), level.getBlockState(spawnerPos), 3);
 
@@ -87,6 +92,7 @@ public class LWandFunction extends Item {
 
                 return InteractionResult.SUCCESS;
             }
+
 
             return InteractionResult.PASS;
         }

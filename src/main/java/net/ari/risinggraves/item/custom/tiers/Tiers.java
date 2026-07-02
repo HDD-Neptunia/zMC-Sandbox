@@ -2,9 +2,12 @@ package net.ari.risinggraves.item.custom.tiers;
 
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.ForgeTier;
-import net.ari.risinggraves.item.ModItems;
 import net.minecraft.world.item.Items;
+
+import net.minecraftforge.common.ForgeTier;
+
+
+import net.ari.risinggraves.item.ModItems;
 
 
 public class Tiers {

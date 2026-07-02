@@ -5,6 +5,11 @@ import com.mojang.logging.LogUtils;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
+
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -14,37 +19,33 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.ari.risinggraves.block.ModBlocks;
-import net.ari.risinggraves.item.ModItems;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.ari.risinggraves.waves.WaveCommand;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+
+import org.slf4j.Logger;
+
+
 import net.ari.risinggraves.zombies.CZombieRenderer;
 import net.ari.risinggraves.scoreboard.SidebarScoreboard;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 import net.ari.risinggraves.barrier.ModMenus;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.ari.risinggraves.networking.Networking;
 import net.ari.risinggraves.perks.PerkSelectionScreen;
 import net.ari.risinggraves.barrier.ModMenus;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.ari.risinggraves.block.wallbuy.WallbuyCostScreen;
-import net.minecraft.client.renderer.RenderType;
 import net.ari.risinggraves.barrier.ResetBlockadesCommand;
-
-
 import net.ari.risinggraves.init.ModEntities;
-
-import org.slf4j.Logger;
-
+import net.ari.risinggraves.block.ModBlocks;
+import net.ari.risinggraves.item.ModItems;
+import net.ari.risinggraves.waves.WaveCommand;
 import net.ari.risinggraves.barrier.CostScreen;
 import net.ari.risinggraves.block.ModBlockEntities;
 import net.ari.risinggraves.waves.WaveManager;
 import net.ari.risinggraves.zombies.TankZombieRenderer;
 
-// The value here should match an entry in the META-INF/mods.toml file
+
 @Mod(RisingGraves.MOD_ID)
 public class RisingGraves
 {
@@ -66,13 +67,10 @@ public class RisingGraves
 
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
-        // Register the commonSetup method for mod loading
         modEventBus.addListener(this::commonSetup);
 
-        //Register the main class event for the Forge event bus
         MinecraftForge.EVENT_BUS.register(this);
 
-        // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
@@ -148,16 +146,15 @@ public class RisingGraves
                 event.accept(ModItems.CITRINE);
                 event.accept(ModItems.RUBY);
                 event.accept(ModItems.AMETHYST);
-
-
-                /*Create own tabs for mod items*/
+                event.accept(ModItems.AMETHYST_SHARD);
+                event.accept(ModItems.CITRINE_SHARD);
+                event.accept(ModItems.RUBY_SHARD);
+                event.accept(ModItems.SAPPHIRE_SHARD);
             }
 
         }
     }
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
 
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 
 

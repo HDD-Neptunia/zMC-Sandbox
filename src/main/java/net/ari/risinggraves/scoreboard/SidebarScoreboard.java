@@ -2,14 +2,19 @@ package net.ari.risinggraves.scoreboard;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.MinecraftServer;
+
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.Scoreboard;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
-import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+
+import net.minecraft.network.chat.Component;
+
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
+
+
+import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)

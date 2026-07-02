@@ -1,6 +1,5 @@
 package net.ari.risinggraves.zombies;
 
-import net.ari.risinggraves.waves.WaveManager;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -8,24 +7,27 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.ari.risinggraves.event.CZombieHitEvent;
-import net.ari.risinggraves.event.CZombieKillEvent;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.MinecraftForge;
+
+import net.minecraft.nbt.CompoundTag;
+
+
 import net.ari.risinggraves.item.ModItems;
 import net.ari.risinggraves.block.ModBlocks;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-
-
+import net.ari.risinggraves.waves.WaveManager;
+import net.ari.risinggraves.event.CZombieHitEvent;
+import net.ari.risinggraves.event.CZombieKillEvent;
 
 
 public class CZombie extends Zombie {
@@ -45,17 +47,14 @@ public class CZombie extends Zombie {
 			this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STICK));
 		}
 
-		// HEALTH SCALING (gentle)
 		double health = 40 + (5 * wave) + (0.5 * wave * wave);
 		this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(health);
 		this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(100.0D);
 		this.setHealth((float)health);
 
-		// DAMAGE SCALING (slow)
 		double damage = 4 + (0.1 * wave);
 		this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(damage);
 
-		// OPTIONAL: slight speed scaling
 		double speed = 0.23 + (wave * 0.003);
 		this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(speed);
 
@@ -99,9 +98,22 @@ public class CZombie extends Zombie {
 
 		Level level = zombie.level;
 
-		// -----------------------------
-		// GEM ITEM DROP (5% chance)
-		// -----------------------------
+
+		if (level.random.nextFloat() < 0.15f) {
+
+			ItemStack drop;
+			int pick = level.random.nextInt(4);
+
+			switch (pick) {
+				case 0 -> drop = new ItemStack(ModItems.SAPPHIRE_SHARD.get());
+				case 1 -> drop = new ItemStack(ModItems.AMETHYST_SHARD.get());
+				case 2 -> drop = new ItemStack(ModItems.RUBY_SHARD.get());
+				default -> drop = new ItemStack(ModItems.CITRINE_SHARD.get());
+			}
+
+			zombie.spawnAtLocation(drop, 1.0f);
+		}
+
 		if (level.random.nextFloat() < 0.05f) {
 
 			ItemStack drop;
@@ -131,10 +143,7 @@ public class CZombie extends Zombie {
 
 			zombie.spawnAtLocation(blockDrop, 1.0f);
 		}
-		// -----------------------------
-		// GEM BLOCK DROP (very rare)
-		// e.g. 1% chance
-		// -----------------------------
+
 		if (level.random.nextFloat() < 0.01f) {
 
 			ItemStack blockDrop;
@@ -150,10 +159,6 @@ public class CZombie extends Zombie {
 			zombie.spawnAtLocation(blockDrop, 1.0f);
 		}
 
-		// -----------------------------
-		// STICK DROP (only if holding)
-		// 25% chance
-		// -----------------------------
 		ItemStack held = zombie.getMainHandItem();
 		if (held.is(Items.STICK)) {
 			if (level.random.nextFloat() < 0.25f) {

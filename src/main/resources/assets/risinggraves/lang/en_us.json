@@ -1,10 +1,15 @@
 {
   "item.risinggraves.lighter": "Lighter",
   "item.risinggraves.blockade_wand": "Blockade Wand",
+  "item.risinggraves.linking_wand": "Linking Wand",
   "item.risinggraves.sapphire": "Sapphire",
   "item.risinggraves.ruby": "Ruby",
   "item.risinggraves.citrine": "Citrine",
   "item.risinggraves.amethyst": "Amethyst",
+  "item.risinggraves.sapphire_shard": "Sapphire Shard",
+  "item.risinggraves.amethyst_shard": "Amethyst Shard",
+  "item.risinggraves.citrine_shard": "Citrine Shard",
+  "item.risinggraves.ruby_shard": "Ruby Shard",
 
 
   "item.risinggraves.sapphire_sword": "Sapphire Sword",
@@ -39,5 +44,7 @@
   "block.risinggraves.block_of_ruby": "Block of Ruby",
   "block.risinggraves.block_of_citrine": "Block of Citrine",
   "block.risinggraves.block_of_amethyst": "Block of Amethyst",
-  "block.risinggraves.mystery_crate": "Mystery Crate"
+  "block.risinggraves.mystery_crate": "Mystery Crate",
+  "block.risinggraves.wallbuy": "Wallbuy",
+  "block.risinggraves.custom_spawner": "Custom Spawner"
 }

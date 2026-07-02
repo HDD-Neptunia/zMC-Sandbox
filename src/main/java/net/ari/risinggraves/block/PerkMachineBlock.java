@@ -4,22 +4,26 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.Level;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.ari.risinggraves.block.PerkMachineBlockEntity;
-import net.ari.risinggraves.perks.PerkType;
+import net.minecraft.world.level.block.RenderShape;
+
+import net.minecraft.core.BlockPos;
+
 import net.minecraft.network.chat.Component;
+
 import net.minecraft.server.level.ServerPlayer;
+
 import net.minecraftforge.network.NetworkHooks;
+
 import net.ari.risinggraves.perks.PerkCosts;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 import net.ari.risinggraves.perks.PerkHandler;
-import net.minecraft.world.level.block.RenderShape;
-
+import net.ari.risinggraves.block.PerkMachineBlockEntity;
+import net.ari.risinggraves.perks.PerkType;
 
 
 public class PerkMachineBlock extends Block implements EntityBlock {
@@ -52,17 +56,15 @@ public class PerkMachineBlock extends Block implements EntityBlock {
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof PerkMachineBlockEntity machine)) return InteractionResult.FAIL;
 
-        // CREATIVE SETUP MODE — open perk selection UI
         if (player.isCreative()) {
             NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 machine,
-                buf -> buf.writeBlockPos(pos)   // <-- write BlockPos into the buffer
+                buf -> buf.writeBlockPos(pos)
             );
             return InteractionResult.SUCCESS;
         }
-
-        // SURVIVAL PURCHASE MODE
+        
         PerkType perk = machine.getPerk();
         int cost = PerkCosts.getCost(perk);
 

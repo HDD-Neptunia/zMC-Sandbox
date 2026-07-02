@@ -1,10 +1,14 @@
 package net.ari.risinggraves.block;
 
-import net.ari.risinggraves.RisingGraves;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+
+import net.ari.risinggraves.RisingGraves;
+
 
 public class ModBlockEntities {
 

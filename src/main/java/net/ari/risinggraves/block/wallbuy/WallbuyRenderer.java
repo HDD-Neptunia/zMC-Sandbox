@@ -2,20 +2,29 @@ package net.ari.risinggraves.block.wallbuy;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.ari.risinggraves.block.WallbuyBlockEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+
+
+
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.client.gui.Font;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
+
+import net.minecraft.core.Direction;
+
+import net.minecraft.network.chat.Component;
+
 import com.mojang.math.Axis;
+
+
+import net.ari.risinggraves.block.WallbuyBlockEntity;
 
 
 public class WallbuyRenderer implements BlockEntityRenderer<WallbuyBlockEntity> {
@@ -37,13 +46,8 @@ public class WallbuyRenderer implements BlockEntityRenderer<WallbuyBlockEntity> 
         // ⭐ Declare facing ONCE
         Direction facing = wallbuy.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 
-
-        // -----------------------------
-        // HOLOGRAM TEXT (name + cost)
-        // -----------------------------
         poseStack.pushPose();
 
-        // 1. Move to block center
         poseStack.translate(0.5, 0.5, 1);
 
         switch (facing) {
@@ -53,14 +57,11 @@ public class WallbuyRenderer implements BlockEntityRenderer<WallbuyBlockEntity> 
         case EAST  -> poseStack.translate(0.501, 0.35, 0);
         }
 
-        // 3. Billboard to face the player
         poseStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
 
-        // 4. Keep text upright (fix vertical tilt)
-        poseStack.mulPose(Axis.YP.rotationDegrees(180)); // optional if mirrored
-        poseStack.mulPose(Axis.ZP.rotationDegrees(0));   // ensures no sideways tilt
+        poseStack.mulPose(Axis.YP.rotationDegrees(180));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(0));
 
-        // 5. Scale text
         poseStack.scale(0.02f, -0.02f, 0.02f);
 
         String text = wallbuy.getItem().getDescription().getString() + " (" + wallbuy.getCost() + ")";
@@ -81,12 +82,6 @@ public class WallbuyRenderer implements BlockEntityRenderer<WallbuyBlockEntity> 
 
         poseStack.popPose();
 
-
-
-        // -----------------------------
-        // ITEM RENDER (3D)
-        // -----------------------------
-        // ⭐ YOUR ITEM BLOCK — UNCHANGED
         poseStack.pushPose();
 
         poseStack.translate(0.5, 0.5, 0.5);

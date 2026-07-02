@@ -6,7 +6,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+
 import net.minecraft.nbt.CompoundTag;
+
 import java.util.UUID;
 
 
@@ -27,6 +29,38 @@ public class PerkHandler {
         applyEffect(player, perk);
     }
 
+    public static void resetPerks(Player player) {
+    // Clear the perk tag entirely
+    player.getPersistentData().remove(PERK_TAG);
+
+    // Remove all applied attribute modifiers
+    removeAllPerkEffects(player);
+}
+
+    private static void removeAllPerkEffects(Player player) {
+        player.removeEffect(MobEffects.MOVEMENT_SPEED);
+
+        AttributeInstance health = player.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            UUID SURVIVABILITY_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+            health.removeModifier(SURVIVABILITY_UUID);
+            player.setHealth(player.getMaxHealth());
+        }
+
+        AttributeInstance attackSpeed = player.getAttribute(Attributes.ATTACK_SPEED);
+        if (attackSpeed != null) {
+            UUID RAPID_FIRE_UUID = UUID.fromString("22222222-2222-2222-2222-222222222222");
+            attackSpeed.removeModifier(RAPID_FIRE_UUID);
+        }
+
+        AttributeInstance damage = player.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            UUID MIGHT_UUID = UUID.fromString("33333333-3333-3333-3333-333333333333");
+            damage.removeModifier(MIGHT_UUID);
+        }
+    }
+
+
     private static void applyEffect(Player player, PerkType perk) {
 
         switch (perk) {
@@ -44,11 +78,9 @@ public class PerkHandler {
                 AttributeInstance health = player.getAttribute(Attributes.MAX_HEALTH);
                 if (health != null) {
 
-                    // Remove old modifier if it exists
                     UUID SURVIVABILITY_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
                     health.removeModifier(SURVIVABILITY_UUID);
 
-                    // Add new modifier
                     health.addPermanentModifier(new AttributeModifier(
                             SURVIVABILITY_UUID,
                             "survivability_bonus",
@@ -56,7 +88,6 @@ public class PerkHandler {
                             AttributeModifier.Operation.ADDITION
                     ));
 
-                    // Force health to update
                     player.setHealth(player.getMaxHealth());
                 }
             }

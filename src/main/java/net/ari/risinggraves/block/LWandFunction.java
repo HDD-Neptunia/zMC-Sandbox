@@ -4,20 +4,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.InteractionResult;
-
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.core.BlockPos;
+
 import net.minecraft.nbt.CompoundTag;
+
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item.Properties;
+
+
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.barrier.BlockadeCluster;
-
-
 import net.ari.risinggraves.block.CustomSpawnerBlockEntity;
 
 
@@ -37,7 +38,6 @@ public class LWandFunction extends Item {
 
             BlockEntity be = level.getBlockEntity(pos);
 
-            // STEP 1 — Click spawner → store its position
             if (be instanceof CustomSpawnerBlockEntity spawner) {
                 tag.putInt("linkingSpawnerX", pos.getX());
                 tag.putInt("linkingSpawnerY", pos.getY());
@@ -47,12 +47,10 @@ public class LWandFunction extends Item {
                 return InteractionResult.SUCCESS;
             }
 
-            // STEP 2 — If wand is in linking mode, click a blockade block → link it
             if (tag.contains("linkingSpawnerX")) {
 
                 BlockadeData data = BlockadeData.get(level);
 
-                // Check if clicked block is part of ANY blockade cluster
                 boolean isDoor = false;
                 for (BlockadeCluster cluster : data.getClusters()) {
                     if (cluster.blocks.contains(pos)) {
@@ -77,6 +75,8 @@ public class LWandFunction extends Item {
                 if (be2 instanceof CustomSpawnerBlockEntity spawner2) {
                     spawner2.setLinkedDoor(pos);
                     spawner2.setChanged();
+                    level.sendBlockUpdated(spawnerPos, level.getBlockState(spawnerPos), level.getBlockState(spawnerPos), 3);
+
                     player.displayClientMessage(Component.literal("§aSpawner linked to blockade!"), true);
                 }
 

@@ -5,14 +5,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.FriendlyByteBuf;
+
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+
 import com.mojang.blaze3d.vertex.PoseStack;
+
+
 import net.ari.risinggraves.block.WallbuyBlockEntity;
-import net.minecraft.network.FriendlyByteBuf;
 import net.ari.risinggraves.barrier.ModMenus;
-import net.minecraft.world.item.Items;
 
 
 public class WallbuyCostMenu extends AbstractContainerMenu {

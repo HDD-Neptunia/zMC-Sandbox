@@ -6,23 +6,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-
-
 import net.minecraft.world.level.Level;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,15 +24,22 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
-import net.ari.risinggraves.block.wallbuy.WallbuyCostMenu;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 
 
 import net.minecraft.network.chat.Component;
 
+import net.minecraftforge.network.NetworkHooks;
+
+import net.minecraft.server.level.ServerPlayer;
+
+
+import net.ari.risinggraves.block.wallbuy.WallbuyCostMenu;
 import net.ari.risinggraves.block.WallbuyBlockEntity;
 import net.ari.risinggraves.block.wallbuy.WallbuyCostMenuProvider;
-
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
+
 
 public class WallbuyBlock extends Block implements EntityBlock {
 
@@ -100,7 +100,6 @@ public class WallbuyBlock extends Block implements EntityBlock {
 
         ItemStack held = player.getItemInHand(hand);
 
-        // CREATIVE SETUP MODE
         if (player.isCreative()) {
             if (!held.isEmpty()) {
                 NetworkHooks.openScreen(
@@ -125,7 +124,6 @@ public class WallbuyBlock extends Block implements EntityBlock {
             }
         }
 
-        // SURVIVAL PURCHASE MODE (unchanged)
         int cost = wallbuy.getCost();
         Item item = wallbuy.getItem();
 

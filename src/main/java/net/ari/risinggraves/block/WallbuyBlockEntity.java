@@ -2,16 +2,18 @@ package net.ari.risinggraves.block;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 
+import net.minecraft.core.BlockPos;
+
+import net.minecraft.resources.ResourceLocation;
+
+import net.minecraftforge.registries.ForgeRegistries;
+
+import net.minecraft.nbt.CompoundTag;
+
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 
 
 public class WallbuyBlockEntity extends BlockEntity {

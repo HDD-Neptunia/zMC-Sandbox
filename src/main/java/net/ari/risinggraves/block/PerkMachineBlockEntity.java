@@ -2,22 +2,26 @@ package net.ari.risinggraves.block;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.network.chat.Component;
-import net.ari.risinggraves.perks.PerkSelectionMenu;
-import net.ari.risinggraves.perks.PerkType;
 import net.minecraft.world.MenuProvider;
+
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
+
+import net.minecraft.core.BlockPos;
+
+import net.minecraft.nbt.CompoundTag;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 
+import net.ari.risinggraves.perks.PerkSelectionMenu;
+import net.ari.risinggraves.perks.PerkType;
 
 
 public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider {
@@ -45,10 +49,6 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
         return perk;
     }
 
-    // -------------------------
-    //   SYNC TO CLIENT
-    // -------------------------
-
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
@@ -64,15 +64,9 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
         load(tag);
     }
 
-    // -------------------------
-    //   SAVE + LOAD
-    // -------------------------
-
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-
-        // DO NOT USE level HERE, IT'S NULL DURING CHUNK LOAD
 
         if (tag.contains("perk")) {
             String s = tag.getString("perk");
@@ -83,7 +77,6 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
             }
         }
 
-        // If you want logging, don't rely on level:
         System.out.println("[BE] load: perk=" + this.perk + " (client=" + (this.level != null && this.level.isClientSide) + ")");
     }
 
@@ -108,13 +101,9 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
         tag.putString("perk", perk.name());
     }
 
-    // -------------------------
-    //   SET PERK + UPDATE CLIENT
-    // -------------------------
-
     public void setPerk(PerkType perk) {
         this.perk = perk;
-        this.getColor(); // refresh cache
+        this.getColor();
 
         System.out.println("[BE] setPerk=" + perk + " client=" + level.isClientSide);
 
@@ -141,13 +130,6 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
         handleUpdateTag(pkt.getTag());
     }
 
-
-
-
-    // -------------------------
-    //   MENU
-    // -------------------------
-
     @Override
     public Component getDisplayName() {
         return Component.literal("Perk Machine");
@@ -157,10 +139,6 @@ public class PerkMachineBlockEntity extends BlockEntity implements MenuProvider 
     public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
         return new PerkSelectionMenu(id, inv, this);
     }
-
-    // -------------------------
-    //   COLOR
-    // -------------------------
 
     public int getColor() {
         this.colorCache = switch (perk) {

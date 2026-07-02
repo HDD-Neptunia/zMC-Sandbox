@@ -1,28 +1,36 @@
 package net.ari.risinggraves.barrier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+
 import net.minecraft.world.item.ItemStack;
-import net.ari.risinggraves.barrier.WandFunction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import net.minecraft.core.BlockPos;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.CompoundTag;
+
 import net.minecraft.network.chat.Component;
 
-
 import java.util.List;
+
+
+import net.ari.risinggraves.barrier.WandFunction;
+
 
 @Mod.EventBusSubscriber(modid = "risinggraves", value = Dist.CLIENT)
 public class SelectionRenderer {
@@ -64,10 +72,8 @@ public static void onRenderLevel(RenderLevelStageEvent event) {
             float r, g, b;
 
             if (i == activeCluster) {
-                // active cluster = yellow
                 r = 1f; g = 1f; b = 0f;
             } else {
-                // inactive clusters = blue
                 r = 0f; g = 0.5f; b = 1f;
             }
 
@@ -75,11 +81,9 @@ public static void onRenderLevel(RenderLevelStageEvent event) {
                 renderOutline(poseStack, buffer, pos, r, g, b);
             }
         }
-
-        return; // stop normal selection rendering
+        return;
     }
 
-        // NORMAL RENDERING: show ACTIVE CLUSTER
     int activeCluster = tag.getInt("activeCluster");
 
     BlockadeData data = BlockadeData.CLIENT;
@@ -88,13 +92,12 @@ public static void onRenderLevel(RenderLevelStageEvent event) {
     if (activeCluster >= 0 && activeCluster < clusters.size()) {
         BlockadeCluster cluster = clusters.get(activeCluster);
 
-        // active cluster = yellow
+
         for (BlockPos pos : cluster.blocks) {
             renderOutline(poseStack, buffer, pos, 1f, 1f, 0f);
         }
     }
 
-    // ALSO render selected blocks (your manual selection)
     for (int i = 0; i < list.size(); i++) {
         CompoundTag b = list.getCompound(i);
         BlockPos pos = new BlockPos(b.getInt("x"), b.getInt("y"), b.getInt("z"));

@@ -1,9 +1,9 @@
 package net.ari.risinggraves.barrier;
 
 import net.minecraft.core.BlockPos;
-import java.util.List;
+
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.BlockPos;
+
 import java.util.List;
 
 

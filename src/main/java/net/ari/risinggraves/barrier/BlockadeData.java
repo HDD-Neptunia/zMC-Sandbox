@@ -3,16 +3,16 @@ package net.ari.risinggraves.barrier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtUtils;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.block.Blocks;
-
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,22 +69,20 @@ public class BlockadeData extends SavedData {
 
             ListTag blocksList = clusterTag.getList("blocks", Tag.TAG_COMPOUND);
             List<BlockPos> blocks = new ArrayList<>();
-            List<BlockState> states = new ArrayList<>(); // <-- NEW
+            List<BlockState> states = new ArrayList<>();
 
             for (Tag bt : blocksList) {
                 CompoundTag b = (CompoundTag) bt;
 
-                // existing
                 blocks.add(new BlockPos(b.getInt("x"), b.getInt("y"), b.getInt("z")));
 
-                // NEW
                 if (b.contains("state")) {
                     states.add(NbtUtils.readBlockState(
                         BuiltInRegistries.BLOCK.asLookup(),
                         b.getCompound("state")
                     ));
                 } else {
-                    // fallback for old clusters
+
                     System.out.println("FALLBACK TRIGGERED: cluster entry missing state tag at " 
                         + b.getInt("x") + "," + b.getInt("y") + "," + b.getInt("z"));
                     states.add(Blocks.AIR.defaultBlockState());
@@ -94,7 +92,20 @@ public class BlockadeData extends SavedData {
             data.clusters.add(new BlockadeCluster(blocks, states, cost));
         }
 
+        data.activeCluster = tag.getInt("activeCluster");
+
         return data;
+    }
+
+    private int activeCluster = 0;
+
+    public int getActiveCluster() {
+        return activeCluster;
+    }
+
+    public void setActiveCluster(int index) {
+        activeCluster = index;
+        setDirty();
     }
 
 
@@ -115,7 +126,6 @@ public class BlockadeData extends SavedData {
                 b.putInt("x", pos.getX());
                 b.putInt("y", pos.getY());
                 b.putInt("z", pos.getZ());
-
                 b.put("state", NbtUtils.writeBlockState(state));
 
                 blocksList.add(b);
@@ -126,8 +136,10 @@ public class BlockadeData extends SavedData {
         }
 
         tag.put("clusters", list);
+
+        tag.putInt("activeCluster", activeCluster);
+
         return tag;
     }
-
 }
 

@@ -2,11 +2,14 @@ package net.ari.risinggraves.barrier;
 
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+
 import net.minecraft.nbt.CompoundTag;
+
 import net.minecraft.core.BlockPos;
 
 import java.util.HashSet;
 import java.util.Set;
+
 
 public class DoorData extends SavedData {
 

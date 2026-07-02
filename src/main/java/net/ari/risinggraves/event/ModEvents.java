@@ -1,46 +1,46 @@
 package net.ari.risinggraves.event;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraft.world.level.Level;
 import net.minecraft.core.BlockPos;
+
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.entity.player.Player;
 
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-
-
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.event.TickEvent;
-import net.minecraft.world.food.FoodData;
-
-import net.ari.risinggraves.waves.WaveManager;
-import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.ari.risinggraves.RisingGraves;
-import net.ari.risinggraves.block.ModBlocks;
-import net.minecraft.server.level.ServerPlayer;
+
 import net.minecraft.network.chat.Component;
 
+import net.minecraft.server.level.ServerPlayer;
+
+import java.util.ArrayList;
+
+
+import net.ari.risinggraves.RisingGraves;
+import net.ari.risinggraves.block.ModBlocks;
+import net.ari.risinggraves.barrier.BlockadeCluster;
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.networking.SyncBlockadesPacket;
 import net.ari.risinggraves.networking.Networking;
-
-import net.minecraftforge.network.PacketDistributor;
-
+import net.ari.risinggraves.waves.WaveManager;
 import net.ari.risinggraves.block.crate.ChestList;
+import net.ari.risinggraves.item.ModItems;
 import static net.ari.risinggraves.waves.WaveManager.wavesActive;
 
 
 @Mod.EventBusSubscriber(modid = RisingGraves.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModEvents {
-
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -62,16 +62,12 @@ public class ModEvents {
             Level level = event.getLevel();
             BlockPos pos = event.getPos();
 
-            // Check if the block is YOUR chest block
             if (level.getBlockState(pos).getBlock() == ModBlocks.MYSTERY_CRATE.get()) {
 
-                // Create your list
                 ChestList list = new ChestList();
 
-                // Get a random item
                 ItemStack reward = list.getRandomItem();
 
-                // Give it to the player
                 event.getEntity().addItem(reward);
             }
         }
@@ -82,24 +78,53 @@ public class ModEvents {
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
 
-        // Your existing starter pick logic
+        BlockadeData data = BlockadeData.get(player.getLevel());
+
+        if (data.getClusters().isEmpty()) {
+            BlockadeCluster first = new BlockadeCluster(
+                new ArrayList<>(),
+                new ArrayList<>(),
+                0
+            );
+
+            data.addCluster(first);
+            data.setActiveCluster(0);
+
+            System.out.println("[Blockades] Created initial cluster 0");
+        }
+
         if (WaveManager.wavesActive) {
+
+            ItemStack drop;
+            int pick = player.level.random.nextInt(3);
+
+            switch (pick) {
+                case 0 -> drop = new ItemStack(ModItems.SAPPHIRE_SHARD.get());
+                case 1 -> drop = new ItemStack(ModItems.AMETHYST_SHARD.get());
+                case 2 -> drop = new ItemStack(ModItems.RUBY_SHARD.get());
+                default -> drop = new ItemStack(ModItems.CITRINE_SHARD.get());
+            }
+            
+		    System.out.println("Picked shard: " + pick + " -> " + drop);
+
+            drop.enchant(Enchantments.SHARPNESS, 1);
+
             ItemStack starter = new ItemStack(Items.WOODEN_PICKAXE);
             starter.enchant(Enchantments.UNBREAKING, 3);
-            starter.setHoverName(Component.literal("Starter Pick"));
+            starter.setHoverName(Component.literal("The beginning of your end."));
 
+            drop.setCount(1);
+            drop.setDamageValue(1);
+
+            player.getInventory().add(drop);
             player.getInventory().add(starter);
         }
 
-        // ⭐ NEW: Sync blockade clusters to client on join
-        BlockadeData data = BlockadeData.get(player.getLevel());
-
         Networking.CHANNEL.send(
             PacketDistributor.PLAYER.with(() -> player),
-            new SyncBlockadesPacket(data.getClusters())
+            new SyncBlockadesPacket(data.getClusters(), data.getActiveCluster())
         );
     }
-
 
     @SubscribeEvent
     public static void onMobSpawn(LivingSpawnEvent.CheckSpawn event) {

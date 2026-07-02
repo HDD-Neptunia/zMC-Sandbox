@@ -1,14 +1,21 @@
 package net.ari.risinggraves.networking;
 
 import java.util.function.Supplier;
+
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraft.world.item.Item;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.FriendlyByteBuf;
-import net.ari.risinggraves.networking.Networking;
+
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
+
+import net.minecraft.server.level.ServerPlayer;
+
+import net.minecraft.network.FriendlyByteBuf;
+
+
+import net.ari.risinggraves.networking.Networking;
 import net.ari.risinggraves.block.wallbuy.WallbuyCostMenu;
 import net.ari.risinggraves.block.WallbuyBlockEntity;
+
 
 public class WallbuyConfirmPacket {
 

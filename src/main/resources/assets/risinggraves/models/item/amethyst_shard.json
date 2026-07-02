@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "risinggraves:item/amethyst_shard"
+  }
+}

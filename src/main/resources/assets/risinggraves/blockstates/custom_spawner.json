@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "risinggraves:block/custom_spawner" }
+  }
+}

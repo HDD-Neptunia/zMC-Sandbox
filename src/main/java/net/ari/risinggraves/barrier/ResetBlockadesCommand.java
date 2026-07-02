@@ -1,16 +1,20 @@
 package net.ari.risinggraves.barrier;
 
 import com.mojang.brigadier.CommandDispatcher;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+
 import net.minecraft.core.BlockPos;
+
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
+
 
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.barrier.BlockadeCluster;
@@ -21,7 +25,7 @@ public class ResetBlockadesCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
             Commands.literal("resetblockades")
-                .requires(source -> source.hasPermission(2)) // OP only
+                .requires(source -> source.hasPermission(2))
                 .executes(ctx -> reset(ctx.getSource()))
         );
     }
@@ -47,7 +51,7 @@ public class ResetBlockadesCommand {
                 BlockPos pos = cluster.blocks.get(i);
                 BlockState state = cluster.states.get(i);
 
-                System.out.println("Placing state: " + state); // DEBUG
+                System.out.println("Placing state: " + state);
 
                 level.setBlock(pos, state, 3);
                 restored++;

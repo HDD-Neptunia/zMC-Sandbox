@@ -4,17 +4,18 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.ari.risinggraves.block.wallbuy.WallbuyRenderer;
-import net.ari.risinggraves.block.PerkMachineRenderer;
-import net.ari.risinggraves.block.ModBlockEntities;
-import net.ari.risinggraves.block.ModBlocks;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 
 
-
+import net.ari.risinggraves.block.wallbuy.WallbuyRenderer;
+import net.ari.risinggraves.block.PerkMachineRenderer;
+import net.ari.risinggraves.block.ModBlockEntities;
+import net.ari.risinggraves.block.ModBlocks;
 import net.ari.risinggraves.RisingGraves;
+
 
 @Mod.EventBusSubscriber(
         modid = RisingGraves.MOD_ID,

@@ -1,13 +1,16 @@
 package net.ari.risinggraves.networking;
 
+import net.minecraft.resources.ResourceLocation;
+
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
+
 import net.ari.risinggraves.RisingGraves;
 import net.ari.risinggraves.networking.SyncBlockadesPacket;
 import net.ari.risinggraves.networking.PerkSelectionPacket;
 import net.ari.risinggraves.networking.WallbuyConfirmPacket;
 import net.ari.risinggraves.networking.ConfirmCostPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+
 
 public class Networking {
 

@@ -2,12 +2,13 @@ package net.ari.risinggraves.perks;
 
 import java.util.Map;
 
+
 public class PerkCosts {
 
     private static final Map<PerkType, Integer> COSTS = Map.of(
-            PerkType.SPEED, 10,
+            PerkType.SPEED, 3500,
             PerkType.SURVIVABILITY, 4000,
-            PerkType.RAPID_FIRE, 2300,
+            PerkType.RAPID_FIRE, 2600,
             PerkType.MIGHT, 5100
     );
 

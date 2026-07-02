@@ -3,24 +3,22 @@ package net.ari.risinggraves.item;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.ari.risinggraves.barrier.WandFunction;
 
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+
+import net.ari.risinggraves.barrier.WandFunction;
 import net.ari.risinggraves.RisingGraves;
 import net.ari.risinggraves.item.custom.tiers.Tiers;
-
 import net.ari.risinggraves.armour.ModArmourMaterials.SapphireArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.RubyArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.CitrineArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.AmethystArmorMaterial;
 import net.ari.risinggraves.block.LWandFunction;
-
-
-
 
 
 public class ModItems {
@@ -41,8 +39,13 @@ public class ModItems {
         public static final RegistryObject<SwordItem> DEBUG_WEAPON = ITEMS.register ("debug_weapon",
                 () -> new SwordItem(Tiers.SAPPHIRE, 200, 2.0f, new Item.Properties()));
 
+
         public static final RegistryObject<Item> SAPPHIRE = ITEMS.register ("sapphire",
                 () -> new Item(new Item.Properties()));
+
+        public static final RegistryObject<Item> SAPPHIRE_SHARD = ITEMS.register ("sapphire_shard",
+                () -> new Item(new Item.Properties()));
+
 
         public static final RegistryObject<SwordItem> SAPPHIRE_SWORD = ITEMS.register ("sapphire_sword",
                 () -> new SwordItem(Tiers.SAPPHIRE, 3, 2.0f, new Item.Properties()));
@@ -103,6 +106,10 @@ public class ModItems {
         public static final RegistryObject<Item> AMETHYST = ITEMS.register ("amethyst",
                 () -> new Item(new Item.Properties()));
 
+        public static final RegistryObject<Item> AMETHYST_SHARD = ITEMS.register ("amethyst_shard",
+                () -> new Item(new Item.Properties()));
+
+
         public static final RegistryObject<SwordItem> AMETHYST_SWORD = ITEMS.register ("amethyst_sword",
                 () -> new SwordItem(Tiers.AMETHYST, 3, 1.9f, new Item.Properties()));
 
@@ -134,6 +141,9 @@ public class ModItems {
 
 
         public static final RegistryObject<Item> RUBY = ITEMS.register ("ruby",
+                () -> new Item(new Item.Properties()));
+
+        public static final RegistryObject<Item> RUBY_SHARD = ITEMS.register ("ruby_shard",
                 () -> new Item(new Item.Properties()));
 
         public static final RegistryObject<SwordItem> RUBY_SWORD = ITEMS.register ("ruby_sword",
@@ -170,6 +180,10 @@ public class ModItems {
         public static final RegistryObject<Item> CITRINE = ITEMS.register ("citrine",
                 () -> new Item(new Item.Properties()));
 
+        public static final RegistryObject<Item> CITRINE_SHARD = ITEMS.register ("citrine_shard",
+                () -> new Item(new Item.Properties()));
+
+                
         public static final RegistryObject<SwordItem> CITRINE_SWORD = ITEMS.register ("citrine_sword",
                 () -> new SwordItem(Tiers.CITRINE, 2, 2.3f, new Item.Properties()));
 

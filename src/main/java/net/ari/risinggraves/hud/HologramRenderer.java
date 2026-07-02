@@ -5,21 +5,27 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+
 import net.minecraft.core.BlockPos;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-// ADD THESE
 import java.util.List;
 import java.util.ArrayList;
 
+
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.barrier.BlockadeCluster;
+
 
 @Mod.EventBusSubscriber(modid = "risinggraves", value = Dist.CLIENT)
 public class HologramRenderer {
@@ -37,24 +43,63 @@ public class HologramRenderer {
 
         BlockadeData data = BlockadeData.CLIENT;
 
-        // FIX: copy list to avoid mutation during render
         List<BlockadeCluster> safeClusters = new ArrayList<>(data.getClusters());
 
         for (BlockadeCluster cluster : safeClusters) {
 
-            // FIX: avoid crash when deselecting
             if (cluster.blocks.isEmpty())
                 continue;
 
-            BlockPos pos = cluster.blocks.get(0);
+            BlockPos center = getClusterCenter(cluster);
+            double[] pos = offsetTowardPlayer(center, player, 0.8);
 
-            double dist = player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5);
+            double dist = player.distanceToSqr(pos[0], pos[1], pos[2]);
             if (dist > 16) continue;
 
             String text = "§ePress §lCrouch§r§e & §lPlace§r§e to open (§a" + cluster.cost + "§e)";
+            renderFloatingText(event.getPoseStack(), text, pos[0], pos[1], pos[2]);
 
-            renderFloatingText(event.getPoseStack(), text, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5);
         }
+    }
+
+    private static BlockPos getClusterCenter(BlockadeCluster cluster) {
+        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+
+        for (BlockPos pos : cluster.blocks) {
+            minX = Math.min(minX, pos.getX());
+            minY = Math.min(minY, pos.getY());
+            minZ = Math.min(minZ, pos.getZ());
+
+            maxX = Math.max(maxX, pos.getX());
+            maxY = Math.max(maxY, pos.getY());
+            maxZ = Math.max(maxZ, pos.getZ());
+        }
+
+        return new BlockPos(
+            (minX + maxX) / 2.0,
+            (minY + maxY) / 2.0,
+            (minZ + maxZ) / 2.0
+        );
+    }
+
+    private static double[] offsetTowardPlayer(BlockPos center, Player player, double distance) {
+        double dx = player.getX() - (center.getX() + 0.5);
+        double dy = player.getY() - (center.getY() + 0.5);
+        double dz = player.getZ() - (center.getZ() + 0.5);
+
+        double len = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if (len == 0) len = 1;
+
+        dx /= len;
+        dy /= len;
+        dz /= len;
+
+        return new double[] {
+            center.getX() + 0.5 + dx * distance,
+            center.getY() + 1.5 + dy * (distance * 0.3),
+            center.getZ() + 0.5 + dz * distance
+        };
     }
 
     private static void renderFloatingText(PoseStack poseStack, String text, double x, double y, double z) {

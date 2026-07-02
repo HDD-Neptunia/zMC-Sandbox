@@ -4,29 +4,29 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.item.ItemStack;
-import net.ari.risinggraves.barrier.ModMenus;
-import net.ari.risinggraves.networking.Networking;
-import net.ari.risinggraves.networking.SyncBlockadesPacket;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.core.registries.BuiltInRegistries;
 
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.ArrayList;
 
+
+import net.ari.risinggraves.networking.Networking;
+import net.ari.risinggraves.networking.SyncBlockadesPacket;
 import net.ari.risinggraves.RisingGraves;
 import net.ari.risinggraves.barrier.BlockadeData;
 import net.ari.risinggraves.barrier.BlockadeCluster;
-
+import net.ari.risinggraves.barrier.ModMenus;
 
 
 public class CostMenu extends AbstractContainerMenu {

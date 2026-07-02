@@ -1,8 +1,11 @@
 package net.ari.risinggraves.event;
 
 import net.minecraft.world.entity.player.Player;
-import net.ari.risinggraves.zombies.CZombie;
+
 import net.minecraftforge.eventbus.api.Event;
+
+
+import net.ari.risinggraves.zombies.CZombie;
 
 public class CZombieKillEvent extends net.minecraftforge.eventbus.api.Event {
     private final Player player;

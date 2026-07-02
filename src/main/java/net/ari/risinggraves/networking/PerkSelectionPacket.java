@@ -1,16 +1,20 @@
 package net.ari.risinggraves.networking;
 
+import java.util.function.Supplier;
+
+import net.minecraftforge.network.NetworkEvent;
+
+import net.minecraft.world.item.Item;
+
+import net.minecraft.server.level.ServerPlayer;
+
+import net.minecraft.network.FriendlyByteBuf;
+
+
+import net.ari.risinggraves.perks.PerkSelectionMenu;
+import net.ari.risinggraves.networking.Networking;
 import net.ari.risinggraves.perks.PerkCosts;
 import net.ari.risinggraves.perks.PerkType;
-import java.util.function.Supplier;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraft.world.item.Item;
-import net.ari.risinggraves.networking.Networking;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.FriendlyByteBuf;
-import net.ari.risinggraves.perks.PerkSelectionMenu;
-
-
 
 
 public class PerkSelectionPacket {

@@ -1,25 +1,26 @@
 package net.ari.risinggraves.barrier;
 
-import net.ari.risinggraves.RisingGraves;
+import net.minecraft.core.BlockPos;
+
+import net.minecraft.nbt.CompoundTag;
+
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.inventory.MenuType;
+
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.ari.risinggraves.barrier.CostMenu;
-import net.ari.risinggraves.perks.PerkSelectionMenu;
-import net.minecraftforge.network.IContainerFactory;
-import net.ari.risinggraves.block.wallbuy.WallbuyCostMenu;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraftforge.network.IContainerFactory;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
+
+import net.ari.risinggraves.RisingGraves;
+import net.ari.risinggraves.block.wallbuy.WallbuyCostMenu;
+import net.ari.risinggraves.perks.PerkSelectionMenu;
+import net.ari.risinggraves.barrier.CostMenu;
 import net.ari.risinggraves.block.WallbuyBlockEntity;
-import net.minecraft.nbt.CompoundTag;
-
-
-
 
 
 public class ModMenus {
@@ -34,7 +35,6 @@ public class ModMenus {
                         return new CostMenu(windowId, inv, inv.player, tag);
                         })
                 );
-
 
         public static final RegistryObject<MenuType<PerkSelectionMenu>> PERK_MENU =
                 MENUS.register("perk_menu",

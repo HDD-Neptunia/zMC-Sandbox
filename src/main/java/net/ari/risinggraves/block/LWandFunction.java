@@ -76,11 +76,13 @@ public class LWandFunction extends Item {
                 if (be2 instanceof CustomSpawnerBlockEntity spawner2) {
 
                     // ALWAYS link to the cluster root, not the clicked block
-                    BlockPos doorRoot = targetCluster.blocks.get(0);
+                    BlockPos doorRoot = pos.immutable();
 
                     spawner2.setLinkedDoor(doorRoot);
                     spawner2.setChanged();
                     level.sendBlockUpdated(spawnerPos, level.getBlockState(spawnerPos), level.getBlockState(spawnerPos), 3);
+
+                    System.out.println("Linked spawner at " + spawnerPos + " to door " + doorRoot);
 
                     player.displayClientMessage(Component.literal("§aSpawner linked to blockade!"), true);
                 }

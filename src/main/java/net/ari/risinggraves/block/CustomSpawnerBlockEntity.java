@@ -53,10 +53,8 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
     }
 
     private void trySpawn() {
-        if (linkedDoor != null && !DoorData.get(level).isDoorPurchased(linkedDoor)) {
-            return;
-        }
 
+        if (linkedDoor != null && !DoorData.get(level).isDoorPurchased(linkedDoor)) return;
         if (!WaveManager.isWaveInProgress()) return;
         if (!WaveManager.canSpawnMore()) return;
 

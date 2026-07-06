@@ -59,6 +59,8 @@ public class ResetBlockadesCommand {
             cluster.purchased = false;
         }
 
+        data.setDirty();
+
         source.sendSuccess(
             Component.literal("§aRegenerated " + restored + " blockade blocks."),
             true

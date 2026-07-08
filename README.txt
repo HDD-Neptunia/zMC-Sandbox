@@ -5,6 +5,8 @@ zMCSandbox
 
 (Join our public Discord and come participate in discussion as well as Map creation! Get feedback on your maps, make new friends and find new worlds to play!)
 
+https://discord.gg/rtGdt5qQF9
+
 
 
 

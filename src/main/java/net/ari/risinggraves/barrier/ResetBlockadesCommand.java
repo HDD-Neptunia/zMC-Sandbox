@@ -33,7 +33,11 @@ public class ResetBlockadesCommand {
     private static int reset(CommandSourceStack source) {
         ServerLevel level = source.getLevel();
         BlockadeData data = BlockadeData.get(level);
+        DoorData doorData = DoorData.get(level);
 
+        doorData.clear();
+
+        doorData.setDirty();
         int restored = 0;
 
         for (ServerPlayer p : level.getServer().getPlayerList().getPlayers()) {

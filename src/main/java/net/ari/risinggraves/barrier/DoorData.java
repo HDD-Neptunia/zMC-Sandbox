@@ -49,6 +49,12 @@ public class DoorData extends SavedData {
         return data;
     }
 
+    public void clear() {
+        purchasedDoors.clear();
+        setDirty();
+    }
+
+
     @Override
     public CompoundTag save(CompoundTag tag) {
         var list = new net.minecraft.nbt.ListTag();

@@ -10,6 +10,7 @@
   "item.risinggraves.amethyst_shard": "Amethyst Shard",
   "item.risinggraves.citrine_shard": "Citrine Shard",
   "item.risinggraves.ruby_shard": "Ruby Shard",
+  "item.risinggraves.emerald_shard": "Emerald Shard",
 
 
   "item.risinggraves.sapphire_sword": "Sapphire Sword",
@@ -30,11 +31,29 @@
   "item.risinggraves.citrine_shovel": "Citrine Shovel",
   "item.risinggraves.ruby_shovel": "Ruby Shovel",
 
-  "item.risinggraves.amethyst_axe": "Amethyst Axe",
-  "item.risinggraves.sapphire_axe": "Sapphire Axe",
-  "item.risinggraves.citrine_axe": "Citrine Axe",
-  "item.risinggraves.emerald_axe": "Emerald Axe",
-  "item.risinggraves.ruby_axe": "Ruby Axe",
+  "item.risinggraves.amethyst_helmet": "Amethyst Helmet",
+  "item.risinggraves.sapphire_helmet": "Sapphire Helmet",
+  "item.risinggraves.citrine_helmet": "Citrine Helmet",
+  "item.risinggraves.emerald_helmet": "Emerald Helmet",
+  "item.risinggraves.ruby_helmet": "Ruby Helmet",
+
+  "item.risinggraves.amethyst_chestplate": "Amethyst Chestplate",
+  "item.risinggraves.sapphire_chestplate": "Sapphire Chestplate",
+  "item.risinggraves.citrine_chestplate": "Citrine Chestplate",
+  "item.risinggraves.emerald_chestplate": "Emerald Chestplate",
+  "item.risinggraves.ruby_chestplate": "Ruby Chestplate",
+
+  "item.risinggraves.amethyst_leggings": "Amethyst Leggings",
+  "item.risinggraves.sapphire_leggings": "Sapphire Leggings",
+  "item.risinggraves.citrine_leggings": "Citrine Leggings",
+  "item.risinggraves.emerald_leggings": "Emerald Leggings",
+  "item.risinggraves.ruby_leggings": "Ruby Leggings",
+
+  "item.risinggraves.amethyst_boots": "Amethyst Boots",
+  "item.risinggraves.sapphire_boots": "Sapphire Boots",
+  "item.risinggraves.citrine_boots": "Citrine Boots",
+  "item.risinggraves.emerald_boots": "Emerald Boots",
+  "item.risinggraves.ruby_boots": "Ruby Boots",
 
   "block.risinggraves.sapphire_ore": "Sapphire Ore",
   "block.risinggraves.ruby_ore": "Ruby Ore",

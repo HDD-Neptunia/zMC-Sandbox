@@ -41,15 +41,15 @@ public class WaveDebugOverlay {
         int textColor = 0xFFEEEEEE;
 
 
-        Gui.fill(pose, x - 6, y - 6, x + 70, y + 46, bgColor);
+        Gui.fill(pose, x - 6, y - 6, x + 90, y + 46, bgColor);
 
-        Gui.fill(pose, x - 6, y - 6, x + 70, y - 5, borderColor);
-        Gui.fill(pose, x - 6, y + 45, x + 70, y + 46, borderColor);
+        Gui.fill(pose, x - 6, y - 6, x + 90, y - 5, borderColor);
+        Gui.fill(pose, x - 6, y + 45, x + 90, y + 46, borderColor);
         Gui.fill(pose, x - 6, y - 6, x - 5, y + 46, borderColor);
-        Gui.fill(pose, x + 69, y - 6, x + 70, y + 46, borderColor);
+        Gui.fill(pose, x + 69, y - 6, x + 90, y + 46, borderColor);
 
         // ⭐ Title
-        gui.drawString(pose, mc.font, "§6Zombies", x, y, titleColor);
+        gui.drawString(pose, mc.font, "§6Prepare to die.", x, y, titleColor);
         y += 14;
 
         // ⭐ Wave

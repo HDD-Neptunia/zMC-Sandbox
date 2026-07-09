@@ -18,6 +18,7 @@ import net.ari.risinggraves.armour.ModArmourMaterials.SapphireArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.RubyArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.CitrineArmorMaterial;
 import net.ari.risinggraves.armour.ModArmourMaterials.AmethystArmorMaterial;
+import net.ari.risinggraves.armour.ModArmourMaterials.EmeraldArmorMaterial;
 import net.ari.risinggraves.block.LWandFunction;
 
 
@@ -77,29 +78,37 @@ public class ModItems {
 
 
 
+        public static final RegistryObject<Item> EMERALD_SHARD = ITEMS.register ("emerald_shard",
+                () -> new Item(new Item.Properties()));
+
         public static final RegistryObject<SwordItem> EMERALD_SWORD = ITEMS.register ("emerald_sword",
-                () -> new SwordItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+                () -> new SwordItem(Tiers.EMERALD, 4, 2.0f, new Item.Properties()));
 
         public static final RegistryObject<ShovelItem> EMERALD_SHOVEL = ITEMS.register ("emerald_shovel",
-                () -> new ShovelItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+                () -> new ShovelItem(Tiers.EMERALD, 2, 1.0f, new Item.Properties()));
                 
         public static final RegistryObject<AxeItem> EMERALD_AXE = ITEMS.register ("emerald_axe",
-                () -> new AxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+                () -> new AxeItem(Tiers.EMERALD, 6, 0.9f, new Item.Properties()));
 
         public static final RegistryObject<PickaxeItem> EMERALD_PICKAXE = ITEMS.register ("emerald_pickaxe",
-                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+                () -> new PickaxeItem(Tiers.EMERALD, 3, 1.2f, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> EMERALD_HELMET = ITEMS.register ("emerald_helmet",
-                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
-        
-        public static final RegistryObject<PickaxeItem> EMERALD_CHESTPLATE = ITEMS.register ("emerald_chestplate",
-                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> EMERALD_HELMET =
+                ITEMS.register("emerald_helmet",
+                        () -> new ArmorItem(EmeraldArmorMaterial.EMERALD, EquipmentSlot.HEAD, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> EMERALD_LEGGINGS = ITEMS.register ("emerald_leggings",
-                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> EMERALD_CHESTPLATE =
+                ITEMS.register("emerald_chestplate",
+                        () -> new ArmorItem(EmeraldArmorMaterial.EMERALD, EquipmentSlot.CHEST, new Item.Properties()));
 
-        public static final RegistryObject<PickaxeItem> EMERALD_BOOTS = ITEMS.register ("emerald_boots",
-                () -> new PickaxeItem(Tiers.EMERALD, 6, 2.7f, new Item.Properties()));
+        public static final RegistryObject<Item> EMERALD_LEGGINGS =
+                ITEMS.register("emerald_leggings",
+                        () -> new ArmorItem(EmeraldArmorMaterial.EMERALD, EquipmentSlot.LEGS, new Item.Properties()));
+
+        public static final RegistryObject<Item> EMERALD_BOOTS =
+                ITEMS.register("emerald_boots",
+                        () -> new ArmorItem(EmeraldArmorMaterial.EMERALD, EquipmentSlot.FEET, new Item.Properties()));
+
 
 
 

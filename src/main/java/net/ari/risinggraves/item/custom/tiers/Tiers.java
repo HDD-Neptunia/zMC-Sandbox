@@ -47,14 +47,14 @@ public class Tiers {
             null,
             () -> Ingredient.of(ModItems.CITRINE.get()));
 
-        public static final Tier EMERALD = new ForgeTier(
-                5,
-                1667,
-                8.0f,
-                6,
-                27,
-                null,
-                () -> Ingredient.of(Items.EMERALD));
+    public static final Tier EMERALD = new ForgeTier(
+            5,
+            3400,
+            8f,
+            9,
+            27,
+            null,
+            () -> Ingredient.of(Items.EMERALD));
 }
 
 

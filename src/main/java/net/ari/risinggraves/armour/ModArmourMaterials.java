@@ -295,4 +295,73 @@ public class ModArmourMaterials {
         }
     }
 
+    public enum EmeraldArmorMaterial implements ArmorMaterial {
+        EMERALD("emerald", 27, new int[]{4, 7, 8, 4}, 30,
+                SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0F, 0.10F, () -> Ingredient.of(Items.EMERALD));
+
+        private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
+        private final String name;
+        private final int durabilityMultiplier;
+        private final int[] slotProtections;
+        private final int enchantmentValue;
+        private final SoundEvent equipSound;
+        private final float toughness;
+        private final float knockbackResistance;
+        private final Supplier<Ingredient> repairIngredient;
+
+        EmeraldArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections,
+                            int enchantmentValue, SoundEvent equipSound,
+                            float toughness, float knockbackResistance,
+                            Supplier<Ingredient> repairIngredient) {
+            this.name = name;
+            this.durabilityMultiplier = durabilityMultiplier;
+            this.slotProtections = slotProtections;
+            this.enchantmentValue = enchantmentValue;
+            this.equipSound = equipSound;
+            this.toughness = toughness;
+            this.knockbackResistance = knockbackResistance;
+            this.repairIngredient = repairIngredient;
+        }
+
+        @Override
+        public int getDurabilityForSlot(EquipmentSlot slot) {
+            return HEALTH_PER_SLOT[slot.getIndex()] * durabilityMultiplier;
+        }
+
+        @Override
+        public int getDefenseForSlot(EquipmentSlot slot) {
+            return slotProtections[slot.getIndex()];
+        }
+
+        @Override
+        public int getEnchantmentValue() {
+            return enchantmentValue;
+        }
+
+        @Override
+        public SoundEvent getEquipSound() {
+            return equipSound;
+        }
+
+        @Override
+        public Ingredient getRepairIngredient() {
+            return repairIngredient.get();
+        }
+
+        @Override
+        public String getName() {
+            return RisingGraves.MOD_ID + ":" + name;
+        }
+
+        @Override
+        public float getToughness() {
+            return toughness;
+        }
+
+        @Override
+        public float getKnockbackResistance() {
+            return knockbackResistance;
+        }
+    }
+
 }

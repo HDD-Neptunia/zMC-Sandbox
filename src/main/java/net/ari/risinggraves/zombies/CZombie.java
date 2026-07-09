@@ -36,13 +36,22 @@ public class CZombie extends Zombie {
         super(type, level);
     }
 
+	protected int spawnRound = 0;
+
+	public void setSpawnRound(int round) {
+		this.spawnRound = round;
+	}
+
+	public int getSpawnRound() {
+		return spawnRound;
+	}
+
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag) {
 		SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, dataTag);
 
 		int wave = WaveManager.getCurrentWave();
 
-		// 10% chance to spawn holding a stick
 		if (this.level.random.nextFloat() < 0.10f) {
 			this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STICK));
 		}
@@ -60,6 +69,8 @@ public class CZombie extends Zombie {
 
 		return data;
 	}
+
+
     @Override
     public void die(DamageSource source) {
         super.die(source);
@@ -112,6 +123,14 @@ public class CZombie extends Zombie {
 			}
 
 			zombie.spawnAtLocation(drop, 1.0f);
+		}
+
+		if (level.random.nextFloat() < 0.085f) {
+
+			ItemStack emerald;
+			emerald = new ItemStack(ModItems.EMERALD_SHARD.get());
+
+			zombie.spawnAtLocation(emerald, 1.0f);
 		}
 
 		if (level.random.nextFloat() < 0.05f) {

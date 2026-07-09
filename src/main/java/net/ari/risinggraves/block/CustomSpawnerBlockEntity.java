@@ -25,7 +25,7 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
 
     private int cooldown = 0;
     private BlockPos linkedDoor = null;
-
+    private int spawnRound = 0;
 
 
 
@@ -35,6 +35,10 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
 
     public void setLinkedDoor(BlockPos pos) {
         this.linkedDoor = pos;
+    }
+
+    public int getSpawnRound() {
+        return spawnRound;
     }
 
     public BlockPos getLinkedDoor() {
@@ -65,6 +69,15 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
             cooldown = 40;
             return;
         }
+
+        if (WaveManager.spawnFrostbiteThisWave && WaveManager.bossCountThisWave > 0) {
+            spawnFrostbiteZombie(level, worldPosition);
+            WaveManager.onZombieSpawned();
+            WaveManager.bossCountThisWave--;
+            cooldown = 40;
+            return;
+        }
+
 
         spawnCZombie(level, worldPosition);
         cooldown = 20;
@@ -115,5 +128,16 @@ public class CustomSpawnerBlockEntity extends BlockEntity {
         server.addFreshEntity(tank);
     }
 
+    private void spawnFrostbiteZombie(Level level, BlockPos pos) {
+        if (!(level instanceof ServerLevel server)) return;
+
+        var frostbite = ModEntities.FROSTBITE_ZOMBIE.get().create(server);
+        if (frostbite == null) return;
+
+        frostbite.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
+                    level.random.nextFloat() * 360F, 0);
+
+        server.addFreshEntity(frostbite);
+    }
 
 }

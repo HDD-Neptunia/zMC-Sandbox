@@ -70,8 +70,19 @@ public class MysteryCrateBlock extends Block {
             return InteractionResult.SUCCESS;
         }
 
+        // Only the active crate should work
         if (!CrateManager.INSTANCE.isActive(pos)) {
-            player.displayClientMessage(Component.literal("§cThe Mystery Box is not here."), true);
+            BlockPos activePos = CrateManager.INSTANCE.getActiveCrate();
+
+            if (activePos == null) {
+                player.displayClientMessage(Component.literal("§cNo active Mystery Crate exists!"), true);
+                return InteractionResult.SUCCESS;
+            }
+
+            System.out.println("ACTIVE CRATE = " + activePos.getX() + ", " + activePos.getY() + ", " + activePos.getZ());
+            player.displayClientMessage(Component.literal("§cThe Mystery Crate is not here."), true);
+
+            // 🔴 THIS is the crucial line
             return InteractionResult.SUCCESS;
         }
 
@@ -93,6 +104,7 @@ public class MysteryCrateBlock extends Block {
 
         return InteractionResult.SUCCESS;
     }
+
 
 }
 

@@ -8,8 +8,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 
+import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -31,11 +33,14 @@ import net.ari.risinggraves.RisingGraves;
 import net.ari.risinggraves.block.ModBlocks;
 import net.ari.risinggraves.barrier.BlockadeCluster;
 import net.ari.risinggraves.barrier.BlockadeData;
+import net.ari.risinggraves.block.crate.CrateManager;
+import net.ari.risinggraves.block.MysteryCrateBlock;
 import net.ari.risinggraves.networking.SyncBlockadesPacket;
 import net.ari.risinggraves.networking.Networking;
 import net.ari.risinggraves.waves.WaveManager;
 import net.ari.risinggraves.block.crate.ChestList;
 import net.ari.risinggraves.item.ModItems;
+import net.ari.risinggraves.block.crate.EnchantmentLogic;
 import static net.ari.risinggraves.waves.WaveManager.wavesActive;
 
 
@@ -54,25 +59,31 @@ public class ModEvents {
         food.setExhaustion(0f);
     }
 
-    public static class OpenChest {
 
-        @SubscribeEvent
-        public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+    @SubscribeEvent
+    public static void onChunkLoad(ChunkEvent.Load event) {
+        Level level = (Level) event.getLevel();
+        if (level.isClientSide()) return;
 
-            Level level = event.getLevel();
-            BlockPos pos = event.getPos();
+        var chunk = event.getChunk();
 
-            if (level.getBlockState(pos).getBlock() == ModBlocks.MYSTERY_CRATE.get()) {
+        int xStart = chunk.getPos().getMinBlockX();
+        int zStart = chunk.getPos().getMinBlockZ();
 
-                ChestList list = new ChestList();
+        for (int x = xStart; x < xStart + 16; x++) {
+            for (int z = zStart; z < zStart + 16; z++) {
+                for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++) {
 
-                ItemStack reward = list.getRandomItem();
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState state = chunk.getBlockState(pos);
 
-                event.getEntity().addItem(reward);
+                    if (state.getBlock() instanceof MysteryCrateBlock) {
+                        CrateManager.INSTANCE.registerCrate(pos);
+                    }
+                }
             }
         }
     }
-
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {

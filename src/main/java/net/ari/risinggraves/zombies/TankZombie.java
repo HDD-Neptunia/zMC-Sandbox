@@ -22,6 +22,8 @@ public class TankZombie extends CZombie {
                 .add(Attributes.MOVEMENT_SPEED, 0.22D);
     }
 
+
+
     @Override
     public void tick() {
         super.tick();

@@ -55,7 +55,7 @@ public class WaveManager {
 
 	public static boolean wavesActive = false;
     public static boolean spawnTankThisWave = false;
-
+    public static boolean spawnFrostbiteThisWave = false;
 
     private static boolean waveInProgress = false;
     private static Level currentLevel;
@@ -86,10 +86,11 @@ public class WaveManager {
         p.connection.send(new ClientboundStopSoundPacket(null, SoundSource.WEATHER));
         }
 
-         zombiesAlive = 0;
+        zombiesAlive = 0;
         zombiesLeftToSpawn = 0;
         bossCountThisWave = 0;
         spawnTankThisWave = false;
+        spawnFrostbiteThisWave = false;
         waveInProgress = false;
 
 
@@ -102,10 +103,6 @@ public class WaveManager {
         }
 
     startWave();
-    }
-
-    public static boolean shouldSpawnBoss(int round) {
-        return round % 6 == 0;
     }
 
     @SubscribeEvent
@@ -184,7 +181,9 @@ public class WaveManager {
     private static void startWave() {
         waveInProgress = true;
 
-        bossCountThisWave = getBossCountForRound(currentWave);
+        bossCountThisWave = getTankCountForRound(currentWave)
+                  + getFrostbiteCountForRound(currentWave);
+
 
         if (bossCountThisWave > 0) {
             playBossWarningSound(bossCountThisWave);
@@ -236,12 +235,32 @@ public class WaveManager {
         }
     }
 
+    public static boolean isBossRound(int round) {
+        return round % 6 == 0;
+    }
+
+    public static boolean shouldSpawnFrostbiteForRound(int round) {
+        return round % 11 == 0;
+    }
+
     public static boolean shouldSpawnTank() {
         return spawnTankThisWave;
     }
 
+    public static int getTankCountForRound(int round) {
+        return (round % 6 == 0) ? (round / 6) : 0;
+    }
+
+    public static boolean shouldSpawnFrostbite() {
+        return spawnFrostbiteThisWave;
+    }
+
     public static int getBossCountForRound(int round) {
         return (round % 6 == 0) ? (round / 6) : 0;
+    }
+
+    public static int getFrostbiteCountForRound(int round) {
+        return (round % 11 == 0) ? (round / 11) : 0;
     }
 
 	@SubscribeEvent
@@ -305,7 +324,10 @@ public class WaveManager {
 
         currentWave++;
 
-        spawnTankThisWave = shouldSpawnBoss(currentWave);
+        spawnTankThisWave = isBossRound(currentWave);
+        spawnFrostbiteThisWave = isBossRound(currentWave);
+
+        
         maxActiveZombies = Math.min(24, 6 + currentWave);
 
         for (ServerPlayer p : currentLevel.getServer().getPlayerList().getPlayers()) {

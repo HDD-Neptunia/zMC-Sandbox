@@ -28,7 +28,6 @@ public class FrostbiteAttackGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        // Only continue while charging
         return zombie.isChargingAttack;
     }
 
@@ -43,7 +42,6 @@ public class FrostbiteAttackGoal extends Goal {
         zombie.attackTimer = 0;
 
         lockedTargetPos = target.position();
-        // Stop movement while charging
         zombie.getNavigation().stop();
     }
 
@@ -53,7 +51,6 @@ public class FrostbiteAttackGoal extends Goal {
         zombie.attackTimer = 0;
 
         zombie.frostbiteCooldown = 60;
-        // Resume movement
         zombie.getNavigation().moveTo(target, 1.0);
     }
 
@@ -66,11 +63,9 @@ public class FrostbiteAttackGoal extends Goal {
 
         zombie.attackTimer++;
 
-        // Telegraph for 20 ticks (1 second)
         if (zombie.attackTimer >= 20) {
             IceSpikeEntity.spawnSpike(zombie, lockedTargetPos);
 
-            // End the attack
             stop();
         }
     }

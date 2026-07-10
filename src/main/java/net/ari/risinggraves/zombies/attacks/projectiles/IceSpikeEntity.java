@@ -29,7 +29,7 @@ public class IceSpikeEntity {
         Vec3 start = zombie.position();
         Vec3 end = targetPos;
 
-        Vec3 direction = end.subtract(start).normalize().scale(1.5); // spacing between spikes
+        Vec3 direction = end.subtract(start).normalize().scale(1.5);
         Vec3 current = start;
 
         for (int i = 0; i < 10; i++) {
@@ -53,13 +53,11 @@ public class IceSpikeEntity {
     public static void tick(Level level) {
         tickCounter++;
         System.out.println("ICE TICK | spikes=" + spikes.size());
-        // Run scheduled spike spawns
         Runnable task = scheduled.remove(tickCounter);
         if (task != null) {
             task.run();
         }
 
-        // Your existing spike cleanup
         Iterator<Map.Entry<BlockPos, Integer>> it = spikes.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<BlockPos, Integer> entry = it.next();
@@ -67,11 +65,9 @@ public class IceSpikeEntity {
             int time = entry.getValue() - 1;
 
             if (time <= 0) {
-                // Remove the tracked spike
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                 it.remove();
 
-                // Nuke all ICE in a radius around the spike
                 int radius = 20;
                 BlockPos center = pos;
 

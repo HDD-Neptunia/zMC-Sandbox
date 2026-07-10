@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import java.util.Map;
+import net.minecraft.util.Mth;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -33,9 +34,10 @@ public class IceSpikeEntity {
 
         for (int i = 0; i < 10; i++) {
             int delayTicks = i * 2;
-            Vec3 spikePos = current;
+            Vec3 spikePos = new Vec3(current.x, current.y, current.z);
 
-            int height = 1 + 1;
+
+            int height = 1 + i;
             scheduled.put(tickCounter + delayTicks, () -> {
                 spawnSingleSpike(level, spikePos, zombie, height);
             });
@@ -50,7 +52,7 @@ public class IceSpikeEntity {
 
     public static void tick(Level level) {
         tickCounter++;
-
+        System.out.println("ICE TICK | spikes=" + spikes.size());
         // Run scheduled spike spawns
         Runnable task = scheduled.remove(tickCounter);
         if (task != null) {
@@ -65,17 +67,40 @@ public class IceSpikeEntity {
             int time = entry.getValue() - 1;
 
             if (time <= 0) {
+                // Remove the tracked spike
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                 it.remove();
+
+                // Nuke all ICE in a radius around the spike
+                int radius = 20;
+                BlockPos center = pos;
+
+                for (int x = -radius; x <= radius; x++) {
+                    for (int y = -radius; y <= radius; y++) {
+                        for (int z = -radius; z <= radius; z++) {
+                            BlockPos check = center.offset(x, y, z);
+                            if (level.getBlockState(check).getBlock() == Blocks.ICE) {
+                                System.out.println("WIPING ICE AT: " + check);
+                                level.setBlock(check, Blocks.AIR.defaultBlockState(), 3);
+                            }
+                        }
+                    }
+                }
             } else {
                 entry.setValue(time);
             }
+
         }
     }
 
 
     private static void spawnSingleSpike(Level level, Vec3 pos, LivingEntity zombie, int height) {
-        BlockPos bp = new BlockPos(pos.x, pos.y, pos.z);
+        BlockPos bp = new BlockPos(
+            Mth.floor(pos.x),
+            Mth.floor(pos.y),
+            Mth.floor(pos.z)
+        );
+
 
         // Build spike upward based on height
         for (int h = 0; h < height; h++) {
@@ -107,10 +132,10 @@ public class IceSpikeEntity {
         level.setBlock(p.west(), Blocks.ICE.defaultBlockState(), 3);
 
         // Remove after 2 seconds
-        level.scheduleTick(p.north(), Blocks.ICE, 40);
-        level.scheduleTick(p.south(), Blocks.ICE, 40);
-        level.scheduleTick(p.east(), Blocks.ICE, 40);
-        level.scheduleTick(p.west(), Blocks.ICE, 40);
+        level.scheduleTick(p.north(), Blocks.AIR, 40);
+        level.scheduleTick(p.south(), Blocks.AIR, 40);
+        level.scheduleTick(p.east(), Blocks.AIR, 40);
+        level.scheduleTick(p.west(), Blocks.AIR, 40);
     }
 }
  

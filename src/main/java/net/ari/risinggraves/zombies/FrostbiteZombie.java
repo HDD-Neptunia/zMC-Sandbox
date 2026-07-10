@@ -46,6 +46,9 @@ public class FrostbiteZombie extends CZombie {
 
     @Override
     public void tick() {
+
+        
+
         super.tick();
 
         if (frostbiteCooldown > 0) frostbiteCooldown--;

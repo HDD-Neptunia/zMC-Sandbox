@@ -42,6 +42,7 @@ import net.ari.risinggraves.item.ModItems;
 import net.ari.risinggraves.waves.WaveCommand;
 import net.ari.risinggraves.barrier.CostScreen;
 import net.ari.risinggraves.block.ModBlockEntities;
+import net.ari.risinggraves.event.ModEvents;
 import net.ari.risinggraves.waves.WaveManager;
 import net.ari.risinggraves.zombies.FrostbiteZombieRenderer;
 import net.ari.risinggraves.zombies.TankZombieRenderer;
@@ -62,11 +63,11 @@ public class RisingGraves
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
-
         ModEntities.ENTITIES.register(modEventBus);
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+
         MinecraftForge.EVENT_BUS.register(WaveManager.class);
 
-        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

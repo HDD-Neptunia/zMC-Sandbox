@@ -145,14 +145,9 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onWorldTick(TickEvent.LevelTickEvent event) {
-        Level level = event.level;
-
-        // SERVER SIDE ONLY
-        if (level.isClientSide()) return;
-
-        // END PHASE ONLY
-        if (event.phase != TickEvent.Phase.END) return;
-
-        IceSpikeEntity.tick(level);
+        if (!event.level.isClientSide() && event.phase == TickEvent.Phase.END) {
+            IceSpikeEntity.tick(event.level);
+        }
     }
+
 }

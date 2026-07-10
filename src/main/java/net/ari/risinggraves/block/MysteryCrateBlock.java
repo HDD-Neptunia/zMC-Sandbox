@@ -22,6 +22,7 @@ import net.minecraft.util.RandomSource;
 import net.ari.risinggraves.block.crate.CrateManager;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
 import net.ari.risinggraves.block.crate.ChestList;
+import net.ari.risinggraves.block.crate.EnchantmentLogic;
 
 
 public class MysteryCrateBlock extends Block {
@@ -98,6 +99,8 @@ public class MysteryCrateBlock extends Block {
 
         ChestList list = new ChestList();
         ItemStack reward = list.getRandomItem();
+
+        EnchantmentLogic.rollCrateEnchants(level, reward);
         player.addItem(reward);
 
         CrateManager.INSTANCE.trySwitch(level, player);

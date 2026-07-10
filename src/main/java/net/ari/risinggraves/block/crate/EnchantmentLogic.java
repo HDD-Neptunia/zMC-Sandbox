@@ -57,13 +57,13 @@ public class EnchantmentLogic {
 
         float roll = level.random.nextFloat();
 
-        if (roll < 0.10f) {
+        if (roll < 0.15f) {
             applyWildTier(level, reward);
         }
-        else if (roll < 0.30f) {
+        else if (roll < 0.40f) {
             applyRareTierCrate(level, reward);
         }
-        else if (roll < 0.50f) {
+        else if (roll < 0.60f) {
             applyUncommonTierCrate(level, reward);
         }
     }
@@ -76,7 +76,8 @@ public class EnchantmentLogic {
 
         for (int i = 0; i < enchantCount; i++) {
             int enchantLevel = rollUncommonLevel(level);
-            Enchantment ench = rollFromPools(level, 0.50f, 0.35f, 0.10f);
+            Enchantment ench = rollValidEnchantment(level, reward, 0.50f, 0.35f, 0.10f, "Uncommon");
+
             reward.enchant(ench, enchantLevel);
         }
         return List.of(reward);
@@ -85,14 +86,14 @@ public class EnchantmentLogic {
     private static int rollUncommonLevel(Level level) {
         float roll = level.random.nextFloat();
 
-        if (roll < 0.5f) {
+        if (roll < 0.20f) {
             return 1 + level.random.nextInt(2);
         }
-        if (roll < 0.75f) {
+        if (roll < 0.45f) {
             return 1 + level.random.nextInt(3);
         }
-        if (roll < 0.95f) {
-            return 2 + level.random.nextInt(2);
+        if (roll < 0.55f) {
+            return 2 + level.random.nextInt(3);
         }
 
         return 1;
@@ -106,7 +107,8 @@ public class EnchantmentLogic {
 
         for (int i = 0; i < enchantCount; i++) {
             int enchantLevel = rollRareLevel(level);
-            Enchantment ench = rollFromPools(level, 0.35f, 0.40f, 0.25f);
+            Enchantment ench = rollValidEnchantment(level, reward, 0.35f, 0.40f, 0.25f, "Rare");
+
 
             reward.enchant(ench, enchantLevel);
         }
@@ -116,14 +118,14 @@ public class EnchantmentLogic {
     private static int rollRareLevel(Level level) {
         float roll = level.random.nextFloat();
 
-        if (roll < 0.05f) {
-            return 3 + level.random.nextInt(4);
+        if (roll < 0.10f) {
+            return 1 + level.random.nextInt(2);
+        }
+        if (roll < 0.20f) {
+            return 2 + level.random.nextInt(3);
         }
         if (roll < 0.30f) {
-            return 3 + level.random.nextInt(3);
-        }
-        if (roll < 0.75f) {
-            return 2 + level.random.nextInt(4);
+            return 3 + level.random.nextInt(4);
         }
 
         return 1;
@@ -137,7 +139,8 @@ public class EnchantmentLogic {
 
         for (int i = 0; i < enchantCount; i++) {
             int enchantLevel = rollWildLevel(level);
-            Enchantment ench = rollFromPools(level, 0.20f, 0.40f, 0.40f);
+            Enchantment ench = rollValidEnchantment(level, reward, 0.20f, 0.40f, 0.40f, "Wild");
+
             reward.enchant(ench, enchantLevel);
         }
         return List.of(reward);
@@ -146,19 +149,38 @@ public class EnchantmentLogic {
     private static int rollWildLevel(Level level) {
         float roll = level.random.nextFloat();
 
-        if (roll < 0.25f) {
-            return 4 + level.random.nextInt(5);
+        if (roll < 0.15f) {
+            return 3 + level.random.nextInt(4);
         }
         if (roll < 0.30f) {
             return 3 + level.random.nextInt(5);
         }
-        if (roll < 0.45f) {
-            return 2 + level.random.nextInt(4);
+        if (roll < 0.55f) {
+            return 4 + level.random.nextInt(5);
         }
 
         return 1;
     }
 
+    private static Enchantment rollValidEnchantment(Level level, ItemStack reward, float p1, float p2, float p3, String rarityName) {
+
+        for (int attempts = 0; attempts < 10; attempts++) {
+            Enchantment ench = rollFromPools(level, p1, p2, p3);
+            System.out.println("[Crate] " + rarityName + " → Rolled " + ench);
+
+            if (ench.canEnchant(reward)) {
+                System.out.println("[Crate] Compatible → Using " + ench);
+                return ench;
+            }
+
+            System.out.println("[Crate] Incompatible → Rerolling...");
+        }
+
+        System.out.println("[Crate] Fallback enchant triggered for " + rarityName);
+        return Enchantments.UNBREAKING;
+
+    }
+    
     private static Enchantment randomEnchantment(Level level) {
         return BuiltInRegistries.ENCHANTMENT.getRandom(level.random)
                 .map(Holder::value)

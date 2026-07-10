@@ -29,6 +29,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.ArrayList;
 
 
+import net.ari.risinggraves.zombies.attacks.projectiles.IceSpikeEntity;
 import net.ari.risinggraves.RisingGraves;
 import net.ari.risinggraves.block.ModBlocks;
 import net.ari.risinggraves.barrier.BlockadeCluster;
@@ -142,6 +143,16 @@ public class ModEvents {
         event.setResult(Event.Result.DENY);
     }
 
+    @SubscribeEvent
+    public static void onWorldTick(TickEvent.LevelTickEvent event) {
+        Level level = event.level;
 
+        // SERVER SIDE ONLY
+        if (level.isClientSide()) return;
 
+        // END PHASE ONLY
+        if (event.phase != TickEvent.Phase.END) return;
+
+        IceSpikeEntity.tick(level);
+    }
 }

@@ -13,6 +13,8 @@ public class FrostbiteZombie extends CZombie {
     public boolean isChargingAttack = false;
     public int attackTimer = 0;
     private int spawnRound = 11;
+    public int frostbiteCooldown = 0;
+
 
     public void setSpawnRound(int round) {
         this.spawnRound = round;
@@ -46,6 +48,15 @@ public class FrostbiteZombie extends CZombie {
     public void tick() {
         super.tick();
 
+        if (frostbiteCooldown > 0) frostbiteCooldown--;
+        
+        if (this.level.isClientSide) {
+            this.level.addParticle(ParticleTypes.SNOWFLAKE,
+                    this.getX(),
+                    this.getY() + 1.0,
+                    this.getZ(),
+                    0, 0.02, 0);
+        }
         // Telegraph particles
         if (this.level.isClientSide && this.isChargingAttack) {
             this.level.addParticle(ParticleTypes.SNOWFLAKE,

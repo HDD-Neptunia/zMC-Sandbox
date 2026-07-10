@@ -26,7 +26,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 
 import org.slf4j.Logger;
 
-
+import net.ari.risinggraves.systems.SetBonusRegistry;
 import net.ari.risinggraves.zombies.CZombieRenderer;
 import net.ari.risinggraves.scoreboard.SidebarScoreboard;
 import net.ari.risinggraves.scoreboard.ScoreboardHandler;
@@ -43,6 +43,7 @@ import net.ari.risinggraves.waves.WaveCommand;
 import net.ari.risinggraves.barrier.CostScreen;
 import net.ari.risinggraves.block.ModBlockEntities;
 import net.ari.risinggraves.waves.WaveManager;
+import net.ari.risinggraves.zombies.FrostbiteZombieRenderer;
 import net.ari.risinggraves.zombies.TankZombieRenderer;
 
 
@@ -93,6 +94,8 @@ public class RisingGraves
         event.enqueueWork(() -> {
             System.out.println("REGISTERING NETWORKING");
             Networking.register();
+
+            SetBonusRegistry.registerDefaults();
         });
     }
 
@@ -174,6 +177,7 @@ public class RisingGraves
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.CZOMBIE.get(), CZombieRenderer::new);
             event.registerEntityRenderer(ModEntities.TANK_ZOMBIE.get(), TankZombieRenderer::new);
+            event.registerEntityRenderer(ModEntities.FROSTBITE_ZOMBIE.get(), FrostbiteZombieRenderer::new);
         }
     }
 }
